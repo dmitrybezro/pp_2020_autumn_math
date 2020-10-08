@@ -5,6 +5,8 @@
 
 # Parallel programming course
 
+**The information of the course is in WIKI!!!**
+
 The following parallel programming technologies are considered in practice:
   * `MPI`
   * `OpenMP`
