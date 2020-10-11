@@ -1,6 +1,6 @@
 // Copyright 2020 Mishin Ilya
-#ifndef MATRIX_ELEM_SUM_H_
-#define MATRIX_ELEM_SUM_H_
+#ifndef MODULES_TASK_1_MISHIN_I_MATRIX_ELEM_SUM_MATRIX_ELEM_SUM_H_
+#define MODULES_TASK_1_MISHIN_I_MATRIX_ELEM_SUM_MATRIX_ELEM_SUM_H_
 
 #include <vector>
 #include <string>
@@ -10,4 +10,4 @@ int getParallelOperations(std::vector<int> vec,
     int count_size_rows, int count_size_cols, std::string ops);
 int getSequentialOperations(std::vector<int> vec, std::string ops);
 
-#endif  // MATRIX_ELEM_SUM_H_
+#endif  // MODULES_TASK_1_MISHIN_I_MATRIX_ELEM_SUM_MATRIX_ELEM_SUM_H_

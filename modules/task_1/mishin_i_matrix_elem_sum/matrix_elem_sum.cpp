@@ -22,13 +22,11 @@ int getSequentialOperations(std::vector<int> vec, std::string ops) {
         for (int i = 0; i < sz; i++) {
             reduction_elem += vec[i];
         }
-    }
-    else if (ops == "-") {
+    } else if (ops == "-") {
         for (int i = 0; i < sz; i++) {
             reduction_elem -= vec[i];
         }
-    }
-    else if (ops == "max") {
+    } else if (ops == "max") {
         reduction_elem = vec[0];
         for (int i = 1; i < sz; i++) {
             reduction_elem = std::max(reduction_elem, vec[i]);
@@ -49,8 +47,7 @@ int getSequentialOperationsMatrix(std::vector<int> vec, int rows, std::string op
         for (int i = 0; i < vec.size() % rows; i++) {
             reduction_elem += vec[vec.size() - i - 1];
         }
-    }
-    else if (ops == "-") {
+    } else if (ops == "-") {
         for (int i = 0; i < vec.size() / rows; i++) {
             for (int j = 0; j < rows; j++) {
                 reduction_elem -= vec[i * rows + j];
@@ -59,8 +56,7 @@ int getSequentialOperationsMatrix(std::vector<int> vec, int rows, std::string op
         for (int i = 0; i < vec.size() % rows; i++) {
             reduction_elem -= vec[vec.size() - i - 1];
         }
-    }
-    else if (ops == "max") {
+    } else if (ops == "max") {
         reduction_elem = vec[0];
         for (int i = 0; i < vec.size() / rows; i++) {
             for (int j = 0; j < rows; j++) {
@@ -93,8 +89,7 @@ int getParallelOperations(std::vector<int> global_vec,
     if (rank == 0) {
         local_vec = std::vector<int>(global_vec.begin(),
             global_vec.begin() + delta);
-    }
-    else {
+    } else {
         MPI_Status status;
         MPI_Recv(&local_vec[0], delta, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
