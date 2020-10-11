@@ -39,32 +39,32 @@ int getSequentialOperationsMatrix(std::vector<int> vec, int rows, std::string op
     const int  sz = vec.size();
     int reduction_elem = 0;
     if (ops == "+") {
-        for (int i = 0; i < vec.size() / rows; i++) {
+        for (int i = 0; i < sz / rows; i++) {
             for (int j = 0; j < rows; j++) {
                 reduction_elem += vec[i * rows + j];
             }
         }
-        for (int i = 0; i < vec.size() % rows; i++) {
-            reduction_elem += vec[vec.size() - i - 1];
+        for (int i = 0; i < sz % rows; i++) {
+            reduction_elem += vec[sz - i - 1];
         }
     } else if (ops == "-") {
-        for (int i = 0; i < vec.size() / rows; i++) {
+        for (int i = 0; i < sz / rows; i++) {
             for (int j = 0; j < rows; j++) {
                 reduction_elem -= vec[i * rows + j];
             }
         }
-        for (int i = 0; i < vec.size() % rows; i++) {
-            reduction_elem -= vec[vec.size() - i - 1];
+        for (int i = 0; i < sz % rows; i++) {
+            reduction_elem -= vec[sz - i - 1];
         }
     } else if (ops == "max") {
         reduction_elem = vec[0];
-        for (int i = 0; i < vec.size() / rows; i++) {
+        for (int i = 0; i < sz / rows; i++) {
             for (int j = 0; j < rows; j++) {
                 reduction_elem = std::max(reduction_elem, vec[i * rows + j]);
             }
         }
-        for (int i = 0; i < vec.size() % rows; i++) {
-            reduction_elem = std::max(reduction_elem, vec[vec.size() - i - 1]);
+        for (int i = 0; i < sz % rows; i++) {
+            reduction_elem = std::max(reduction_elem, vec[sz - i - 1]);
         }
     }
     return reduction_elem;
