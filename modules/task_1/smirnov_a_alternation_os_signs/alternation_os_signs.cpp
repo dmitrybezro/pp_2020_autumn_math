@@ -53,7 +53,7 @@ int getParallelOperations(std::vector<int> global_vec,
             global_vec.begin() + count_size_vector);
     } else {
         MPI_Status status;
-        MPI_Recv(&local_vec[0], count_size_vector, MPI_INT, ,
+        MPI_Recv(&local_vec[0], count_size_vector, MPI_INT,
             0, 0, MPI_COMM_WORLD, &status);
     }
 
