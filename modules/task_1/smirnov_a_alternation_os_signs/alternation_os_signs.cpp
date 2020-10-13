@@ -59,7 +59,6 @@ int getParallelOperations(std::vector<int> global_vec,
 
     int local_count = 0;
     for (int i = rank; i < (count_size_vector - 1); i += size) {
-        bool positive;
         if (local_vec[i] * local_vec[i + 1] < 0) local_count++;
     }
     MPI_Reduce(&local_count, &change_of_sings, 1, MPI_INT,
