@@ -18,41 +18,58 @@ std::vector<int> getRandomVector(int sz) {
 
 int getSequentialOperations(std::vector<int> vec) {
 	const int  sz = vec.size();
+	if (sz == 0) return 0;
+	double t1, t2;
 	int change_of_sings = 0;
-	bool positive;
-	int i = 0;
-
-	while (vec[i] == 0) i++;
-
-	if (vec[i] > 0) positive = true;
-	else positive = false;
-	
-	for (; i < sz; i++) {
-		if (positive == true && vec[i] < 0) {
-			positive = false;
-			change_of_sings++;
-		}
-		if (positive == false && vec[i] > 0) {
-			positive = true;
-			change_of_sings++;
-		}
+	t1 = MPI_Wtime();
+	for (int i = 0; i < sz - 1; i++) {
+		if (vec[i] * vec[i + 1] < 0) change_of_sings++;
 	}
+	t2 = MPI_Wtime();
+	printf("time = %3.20f\n", t2 - t1);
 	return change_of_sings;
 }
 
-int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
-	int size, rank, done = 0, * displs, * scounts;;
+int getParallelOperations(std::vector<int> global_vec,
+	int count_size_vector) {
 	double t1, t2;
-	int n;
-	int change_of_sings = 0, mychange = 0;
-
+	int size, rank;
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	int change_of_sings = 0;
 
-	MPI_Bcast(&global_vec, count_size_vector, MPI_INT, 0, MPI_COMM_WORLD);
+	if (count_size_vector == 0) return 0;
+	if (rank == 0) {
+		t1 = MPI_Wtime();
+		for (int proc = 1; proc < size; proc++) {
+			MPI_Send(&global_vec[0], count_size_vector,
+				MPI_INT, proc, 0, MPI_COMM_WORLD);
+		}
+	}
+
+	std::vector<int> local_vec(count_size_vector);
+	if (rank == 0) {
+		local_vec = std::vector<int>(global_vec.begin(),
+			global_vec.begin() + count_size_vector);
+	} else {
+		MPI_Status status;
+		MPI_Recv(&local_vec[0], count_size_vector, MPI_INT, 
+			0, 0, MPI_COMM_WORLD, &status);
+	}
+
 	int local_count = 0;
-	for (int i = rank; i < (count_size_vector - 1); i += size)
-		local_count += getSequentialOperations(std::vector<int>{global_vec[i], global_vec[i + 1]});
-	MPI_Reduce(&local_count, &change_of_sings, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	for (int i = rank; i < (count_size_vector - 1); i += size) {
+		bool positive;
+		if (local_vec[i] * local_vec[i + 1] < 0) local_count++;
+	}
+	MPI_Reduce(&local_count, &change_of_sings, 1, MPI_INT, 
+			MPI_SUM, 0, MPI_COMM_WORLD);
+
+	if (rank == 0) {
+		t2 = MPI_Wtime();
+		printf("time = %3.20f\n", t2 - t1);
+	}
 	return change_of_sings;
+
+
 }
