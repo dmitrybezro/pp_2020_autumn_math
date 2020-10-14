@@ -19,7 +19,7 @@ std::vector<char> getRandomString(int size) {
 
 int getSequentialCount(std::vector<char> str) {
     int counter = 0;
-    for (size_t i = 0; i < str.size(); i++) {
+    for (unsigned int i = 0; i < str.size(); i++) {
         if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z'))
             counter++;
     }
