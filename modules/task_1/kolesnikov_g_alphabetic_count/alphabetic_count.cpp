@@ -1,3 +1,4 @@
+// Copyright 2020 Kolesnikov Gleb
 #include <mpi.h>
 #include <vector>
 #include <string>
@@ -5,7 +6,6 @@
 #include <ctime>
 #include <algorithm>
 #include "../../../modules/task_1/kolesnikov_g_alphabetic_count/aplhabetic_count.h"
-#include <iostream>
 
 std::vector<char> getRandomString(int size) {
 	const std::string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

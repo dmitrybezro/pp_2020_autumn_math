@@ -7,16 +7,16 @@
 TEST(Parallel_Operations_MPI, test_0) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	std::vector<char> global_str;
-	const int size = 40;
+    std::vector<char> global_str;
+    const int size = 40;
 
-	if (rank == 0) {
+    if (rank == 0) {
 		global_str = getRandomString(size);
-	}
+    }
 
-	int global_counter = getParallelCount(global_str, size);
+    int global_counter = getParallelCount(global_str, size);
 
-	if (rank == 0) {
+    if (rank == 0) {
 		int sequential_counter = getSequentialCount(global_str);
 		ASSERT_EQ(sequential_counter, global_counter);
 	}
