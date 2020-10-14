@@ -1,11 +1,12 @@
+// Copyright 2020 Kolesnikov Gleb
 #include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
 #include <vector>
 #include "./aplhabetic_count.h"
 
 TEST(Parallel_Operations_MPI, test_0) {
-	int rank;
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	std::vector<char> global_str;
 	const int size = 40;
 

@@ -50,5 +50,5 @@ int getParallelCount(std::vector<char> global_str,
 	}
 	int local_counter = getSequentialCount(local_str);
 	MPI_Reduce(&local_counter, &global_counter, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-	return global_counter;
+    return global_counter;
 }
