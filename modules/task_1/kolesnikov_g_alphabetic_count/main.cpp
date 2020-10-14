@@ -3,29 +3,90 @@
 #include <vector>
 #include "./aplhabetic_count.h"
 
-TEST(Parallel_Operations_MPI, Test_Sum) {
+TEST(Parallel_Operations_MPI, test_0) {
 	int rank;
-	int i;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	std::vector<char> global_line;
-	const int size_line = 12;
-	
-	if (rank == 0) {
-		global_line = getRandomString(size_line);
-		int reference_sum_sentences = getSequentialCount(global_line);
-		std::cout << reference_sum_sentences;
-	}
-	
-	int global_sum_sentences = getParallelCount(global_line);
-	std::cin >> i;
-	/*
+	std::vector<char> global_str;
+	const int size = 40;
 
 	if (rank == 0) {
-		int reference_sum_sentences = getSequentialCount(global_line);
-		ASSERT_EQ(reference_sum_sentences, global_sum_sentences);
+		global_str = getRandomString(size);
 	}
-	*/
-	ASSERT_EQ(1, 1);
+
+	int global_counter = getParallelCount(global_str, size);
+
+	if (rank == 0) {
+		int sequential_counter = getSequentialCount(global_str);
+		ASSERT_EQ(sequential_counter, global_counter);
+	}
+}
+TEST(Parallel_Operations_MPI, test_1) {
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	std::vector<char> global_str;
+	const int size = 100;
+
+	if (rank == 0) {
+		global_str = getRandomString(size);
+	}
+
+	int global_counter = getParallelCount(global_str, size);
+
+	if (rank == 0) {
+		int sequential_counter = getSequentialCount(global_str);
+		ASSERT_EQ(sequential_counter, global_counter);
+	}
+}
+TEST(Parallel_Operations_MPI, test_2) {
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	std::vector<char> global_str;
+	const int size = 200;
+
+	if (rank == 0) {
+		global_str = getRandomString(size);
+	}
+
+	int global_counter = getParallelCount(global_str, size);
+
+	if (rank == 0) {
+		int sequential_counter = getSequentialCount(global_str);
+		ASSERT_EQ(sequential_counter, global_counter);
+	}
+}
+TEST(Parallel_Operations_MPI, test_3) {
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	std::vector<char> global_str;
+	const int size = 400;
+
+	if (rank == 0) {
+		global_str = getRandomString(size);
+	}
+
+	int global_counter = getParallelCount(global_str, size);
+
+	if (rank == 0) {
+		int sequential_counter = getSequentialCount(global_str);
+		ASSERT_EQ(sequential_counter, global_counter);
+	}
+}
+TEST(Parallel_Operations_MPI, test_4) {
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	std::vector<char> global_str;
+	const int size = 1000;
+
+	if (rank == 0) {
+		global_str = getRandomString(size);
+	}
+
+	int global_counter = getParallelCount(global_str, size);
+
+	if (rank == 0) {
+		int sequential_counter = getSequentialCount(global_str);
+		ASSERT_EQ(sequential_counter, global_counter);
+	}
 }
 
 int main(int argc, char** argv) {
@@ -33,7 +94,8 @@ int main(int argc, char** argv) {
 	MPI_Init(&argc, &argv);
 
 	::testing::AddGlobalTestEnvironment(new GTestMPIListener::MPIEnvironment);
-	::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
+	::testing::TestEventListeners& listeners =
+		::testing::UnitTest::GetInstance()->listeners();
 
 	listeners.Release(listeners.default_result_printer());
 	listeners.Release(listeners.default_xml_generator());

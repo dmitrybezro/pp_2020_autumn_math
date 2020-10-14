@@ -7,8 +7,7 @@
 #include "../../../modules/task_1/kolesnikov_g_alphabetic_count/aplhabetic_count.h"
 #include <iostream>
 
-
-std::vector<char> getRandomString(int size){
+std::vector<char> getRandomString(int size) {
 	const std::string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	srand(time(NULL));
 	std::vector<char> random_string;
@@ -27,28 +26,31 @@ int getSequentialCount(std::vector<char> str) {
 	return counter;
 }
 
-int getParallelCount(std::vector<char> glob_str) {
-	int size, rank; 
-	int global_counter = 0;;
+int getParallelCount(std::vector<char> global_str,
+	int vector_size) {
+	int size;
+	int rank;
+	int global_counter = 0;
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	const int delta = glob_str.size() / size;
-
+	const int delta = vector_size / size;
 	if (rank == 0) {
 		for (int process = 1; process < size; process++) {
-			MPI_Send(&glob_str[0] + process * delta, delta, MPI_CHAR, process, 0, MPI_COMM_WORLD);
+			MPI_Send(&global_str[0] + process * delta, delta,
+				MPI_CHAR, process, 0, MPI_COMM_WORLD);
 		}
 	}
 
 	std::vector<char> local_str(delta);
 	if (rank == 0) {
-		local_str = std::vector<char>(glob_str.begin(), glob_str.begin() + delta);
+		local_str = std::vector<char>(global_str.begin(),
+			global_str.begin() + delta);
 	}
 	else {
 		MPI_Status status;
 		MPI_Recv(&local_str[0], delta, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &status);
 	}
-	int local_sum_sentences = getSequentialCount(local_str);
-	MPI_Reduce(&local_sum_sentences, &global_counter, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	int local_counter = getSequentialCount(local_str);
+	MPI_Reduce(&local_counter, &global_counter, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 	return global_counter;
 }
