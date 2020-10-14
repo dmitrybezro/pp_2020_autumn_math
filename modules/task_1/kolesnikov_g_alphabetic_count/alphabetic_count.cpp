@@ -36,15 +36,13 @@ int getParallelCount(std::vector<char> global_str,
 	const int delta = vector_size / size;
 	if (rank == 0) {
 		for (int process = 1; process < size; process++) {
-			MPI_Send(&global_str[0] + process * delta, delta,
-				MPI_CHAR, process, 0, MPI_COMM_WORLD);
+			MPI_Send(&global_str[0] + process * delta, delta, MPI_CHAR, process, 0, MPI_COMM_WORLD);
 		}
 	}
 
 	std::vector<char> local_str(delta);
 	if (rank == 0) {
-		local_str = std::vector<char>(global_str.begin(),
-			global_str.begin() + delta);
+		local_str = std::vector<char>(global_str.begin(), global_str.begin() + delta);
 	}
 	else {
 		MPI_Status status;
