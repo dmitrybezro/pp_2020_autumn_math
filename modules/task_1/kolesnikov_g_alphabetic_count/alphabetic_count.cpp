@@ -19,8 +19,8 @@ std::vector<char> getRandomString(int size) {
 
 int getSequentialCount(std::vector<char> str) {
     int counter = 0;
-    for (int i = 0; i< str.size(); i++) {
-        if (str[i] >= 'A' && str[i] <= 'Z' || str[i] >= 'a' && str[i] <= 'z')
+    for (int i = 0; i < str.size(); i++) {
+        if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z'))
             counter++;
     }
     return counter;
