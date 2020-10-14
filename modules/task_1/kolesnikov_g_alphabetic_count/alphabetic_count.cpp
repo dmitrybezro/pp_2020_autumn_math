@@ -43,7 +43,7 @@ int getParallelCount(std::vector<char> global_str,
     std::vector<char> local_str(delta);
     if (rank == 0) {
         local_str = std::vector<char>(global_str.begin(), global_str.begin() + delta);
-    }else {
+    } else {
         MPI_Status status;
         MPI_Recv(&local_str[0], delta, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &status);
     }
