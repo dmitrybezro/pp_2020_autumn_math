@@ -8,8 +8,8 @@ TEST(Parallel_Operations_MPI, Test_Sum) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> global_matrix1D;
-    const int count_size_cols = 10;
-    const int count_size_rows = 10;
+    const int count_size_cols = 200;
+    const int count_size_rows = 200;
 
     if (rank == 0) {
         global_matrix1D = getRandomVector(count_size_rows * count_size_cols);
@@ -27,8 +27,8 @@ TEST(Parallel_Operations_MPI, Test_Diff) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> global_matrix1D;
-    const int count_size_cols = 10;
-    const int count_size_rows = 10;
+    const int count_size_cols = 200;
+    const int count_size_rows = 200;
 
     if (rank == 0) {
         global_matrix1D = getRandomVector(count_size_rows * count_size_cols);
@@ -46,8 +46,8 @@ TEST(Parallel_Operations_MPI, Test_Max) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> global_matrix1D;
-    const int count_size_cols = 10;
-    const int count_size_rows = 10;
+    const int count_size_cols = 200;
+    const int count_size_rows = 200;
 
     if (rank == 0) {
         global_matrix1D = getRandomVector(count_size_rows * count_size_cols);

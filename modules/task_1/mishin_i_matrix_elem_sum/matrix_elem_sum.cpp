@@ -77,11 +77,18 @@ int getParallelOperations(std::vector<int> global_vec,
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     const int delta = count_size_rows * count_size_col / size;
+    const int overhead = count_size_rows * count_size_col % size;
 
     if (rank == 0) {
         for (int proc = 1; proc < size; proc++) {
-            MPI_Send(&global_vec[0] + proc * delta, delta,
-                MPI_INT, proc, 0, MPI_COMM_WORLD);
+           if (proc <= overhead) {
+                MPI_Send(&global_vec[0] + proc * delta + (proc - 1), delta + 1,
+                    MPI_INT, proc, 0, MPI_COMM_WORLD);
+            }
+            else { 
+                MPI_Send(&global_vec[0] + proc * delta + overhead, delta,
+                    MPI_INT, proc, 0, MPI_COMM_WORLD);
+            }
         }
     }
 
@@ -91,7 +98,13 @@ int getParallelOperations(std::vector<int> global_vec,
             global_vec.begin() + delta);
     } else {
         MPI_Status status;
-        MPI_Recv(&local_vec[0], delta, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        if (rank <= overhead) {
+            local_vec.resize(delta + 1);
+            MPI_Recv(&local_vec[0], delta + 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        }
+        else {
+            MPI_Recv(&local_vec[0], delta, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        }  
     }
 
     int global_sum = 0;
