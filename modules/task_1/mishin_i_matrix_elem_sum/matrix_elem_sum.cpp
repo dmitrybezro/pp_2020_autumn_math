@@ -84,8 +84,7 @@ int getParallelOperations(std::vector<int> global_vec,
            if (proc <= overhead) {
                 MPI_Send(&global_vec[0] + proc * delta + (proc - 1), delta + 1,
                     MPI_INT, proc, 0, MPI_COMM_WORLD);
-            }
-            else { 
+            } else {
                 MPI_Send(&global_vec[0] + proc * delta + overhead, delta,
                     MPI_INT, proc, 0, MPI_COMM_WORLD);
             }
@@ -101,10 +100,9 @@ int getParallelOperations(std::vector<int> global_vec,
         if (rank <= overhead) {
             local_vec.resize(delta + 1);
             MPI_Recv(&local_vec[0], delta + 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
-        }
-        else {
+        } else {
             MPI_Recv(&local_vec[0], delta, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
-        }  
+        }
     }
 
     int global_sum = 0;
