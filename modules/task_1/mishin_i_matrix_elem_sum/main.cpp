@@ -4,12 +4,88 @@
 #include <vector>
 #include "./matrix_elem_sum.h"
 
-TEST(Parallel_Operations_MPI, Test_Sum) {
+TEST(Parallel_Operations_MPI, Test_Sum_10_10) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> global_matrix1D;
-    const int count_size_cols = 200;
+    const int count_size_cols = 10;
+    const int count_size_rows = 10;
+
+    if (rank == 0) {
+        global_matrix1D = getRandomVector(count_size_rows * count_size_cols);
+    }
+
+    int global_sum = getParallelOperations(global_matrix1D, count_size_rows, count_size_cols , "+");
+
+    if (rank == 0) {
+        int reference_sum = getSequentialOperations(global_matrix1D, "+");
+        ASSERT_EQ(reference_sum, global_sum);
+    }
+}
+
+TEST(Parallel_Operations_MPI, Test_Sum_100_100) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<int> global_matrix1D;
+    const int count_size_cols = 100;
     const int count_size_rows = 200;
+
+    if (rank == 0) {
+        global_matrix1D = getRandomVector(count_size_rows * count_size_cols);
+    }
+
+    int global_sum = getParallelOperations(global_matrix1D, count_size_rows, count_size_cols , "+");
+
+    if (rank == 0) {
+        int reference_sum = getSequentialOperations(global_matrix1D, "+");
+        ASSERT_EQ(reference_sum, global_sum);
+    }
+}
+
+TEST(Parallel_Operations_MPI, Test_Sum_101_202) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<int> global_matrix1D;
+    const int count_size_cols = 101;
+    const int count_size_rows = 201;
+
+    if (rank == 0) {
+        global_matrix1D = getRandomVector(count_size_rows * count_size_cols);
+    }
+
+    int global_sum = getParallelOperations(global_matrix1D, count_size_rows, count_size_cols , "+");
+
+    if (rank == 0) {
+        int reference_sum = getSequentialOperations(global_matrix1D, "+");
+        ASSERT_EQ(reference_sum, global_sum);
+    }
+}
+
+TEST(Parallel_Operations_MPI, Test_Sum_1001_2003) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<int> global_matrix1D;
+    const int count_size_cols = 1001;
+    const int count_size_rows = 2003;
+
+    if (rank == 0) {
+        global_matrix1D = getRandomVector(count_size_rows * count_size_cols);
+    }
+
+    int global_sum = getParallelOperations(global_matrix1D, count_size_rows, count_size_cols , "+");
+
+    if (rank == 0) {
+        int reference_sum = getSequentialOperations(global_matrix1D, "+");
+        ASSERT_EQ(reference_sum, global_sum);
+    }
+}
+
+TEST(Parallel_Operations_MPI, Test_Sum_1001_2001) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<int> global_matrix1D;
+    const int count_size_cols = 1001;
+    const int count_size_rows = 2001;
 
     if (rank == 0) {
         global_matrix1D = getRandomVector(count_size_rows * count_size_cols);
