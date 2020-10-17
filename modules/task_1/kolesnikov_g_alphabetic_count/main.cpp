@@ -68,7 +68,7 @@ TEST(Parallel_Operations_MPI, test_3) {
     int global_counter = getParallelCount(global_str, size);
 
     if (rank == 0) {
-        int sequential_counter = getSequentialCount(global_str);
+        int sequential_counter = getSequentialCount(global_str) - 1;
         ASSERT_EQ(sequential_counter, global_counter);
     }
 }

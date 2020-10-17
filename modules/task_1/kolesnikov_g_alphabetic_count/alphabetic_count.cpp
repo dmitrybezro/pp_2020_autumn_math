@@ -34,9 +34,14 @@ int getParallelCount(std::vector<char> global_str,
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     const int delta = vector_size / size;
+    const int rmd = vector_size % size;
     if (rank == 0) {
         for (int process = 1; process < size; process++) {
-            MPI_Send(&global_str[0] + process * delta, delta, MPI_CHAR, process, 0, MPI_COMM_WORLD);
+            if (process <= rmd) {
+                MPI_Send(&global_str[0] + process * delta + process - 1, delta + 1, MPI_CHAR, process, 0, MPI_COMM_WORLD);
+            } else {
+                MPI_Send(&global_str[0] + process * delta + rmd, delta, MPI_CHAR, process, 0, MPI_COMM_WORLD);
+            }
         }
     }
 
@@ -45,7 +50,12 @@ int getParallelCount(std::vector<char> global_str,
         local_str = std::vector<char>(global_str.begin(), global_str.begin() + delta);
     } else {
         MPI_Status status;
-        MPI_Recv(&local_str[0], delta, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &status);
+        if (rank > rmd) {
+            MPI_Recv(&local_str[0], delta, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &status);
+        } else {
+            local_str.push_back(' ');
+            MPI_Recv(&local_str[0], delta + 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD, &status);
+        }
     }
     int local_counter = getSequentialCount(local_str);
     MPI_Reduce(&local_counter, &global_counter, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
