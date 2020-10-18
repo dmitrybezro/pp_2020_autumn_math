@@ -11,7 +11,7 @@ struct MyPair{
 };
 
 std::vector<int> getRandomVector(int n);
-int getParallelOperations(std::vector<int>& global_vec);
-int getSequentialOperations(std::vector<int>& vec);
+int getParallelOperations(const std::vector<int>& global_vec);
+int getSequentialOperations(const std::vector<int>& vec);
 
 #endif  // MODULES_TASK_1_KUDRIAVTSEV_A_MAX_DIFF_NEIGHBORS_IN_VEC_MPI_H_
