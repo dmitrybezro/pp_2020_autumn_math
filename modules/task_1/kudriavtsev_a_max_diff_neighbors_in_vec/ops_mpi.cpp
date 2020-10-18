@@ -11,7 +11,7 @@ std::vector<int> getRandomVector(int n) {  // Copied from https://github.com/all
     std::vector<int> vec(n);
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
-    for (size_t i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         vec[i] = gen() % 1000;
     }
     return vec;
