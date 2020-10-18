@@ -7,7 +7,7 @@
 #include <iostream>
 #include "./ops_mpi.h"
 
-std::vector<int> getRandomVector(int n) { //Copied from https://github.com/allnes/pp_2020_autumn_math/pull/1
+std::vector<int> getRandomVector(int n) {  // Copied from https://github.com/allnes/pp_2020_autumn_math/pull/1
     std::vector<int> vec(n);
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
@@ -17,16 +17,14 @@ std::vector<int> getRandomVector(int n) { //Copied from https://github.com/allne
     return vec;
 }
 
-int getSequentialOperations(std::vector<int> vec, int count_size_vector) { // Is using  & LEGAL? Travis says NO, but I say YES. But const & is the best thing in this world (Probably)
-    const size_t  n = vec.size();
-    double t_b, t_e; // Time of the Beginning and of the End... (No End,No Beginning is a good song)
-
+int getSequentialOperations(std::vector<int> vec, int n) {  // Is using  & LEGAL? Travis says NO, but I say YES.
+    double t_b, t_e;  // Time of the Beginning and of the End... (No End,No Beginning is a good song)
     t_b = MPI_Wtime();
     MyPair res;
     res.diff = abs(vec[1] - vec[0]);
     res.indx = 0;
-    for(int i=1;(i + 1) < n; ++i){
-        int tmp = abs(vec[i+1] - vec[i]);
+    for (int i = 1; (i + 1) < n; ++i) {
+        int tmp = abs(vec[i + 1] - vec[i]);
         if (tmp > res.diff) {
             res.diff = tmp;
             res.indx = i;
@@ -55,10 +53,9 @@ int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
         for (int proc = 1; proc < size; ++proc) {
             if (proc <= remed) {
                 // std::cout << "proc = " << proc << "\t size of buffer = " << delta + 2 << std::endl;
-                MPI_Send(&global_vec[0] + proc * delta + proc - 2, // Is using &global_vec[0] LEGAL? CPPReference says YES since c++03 https://en.cppreference.com/w/cpp/container/vector
+                MPI_Send(&global_vec[0] + proc * delta + proc - 2, // Is using &global_vec[0] LEGAL? YES
                     delta + 2, MPI_INT, proc, 0, MPI_COMM_WORLD); // MPI_Bcast (?) is faster
-            } else { //  If an else has a brace on one side, it should have it on both... I don't like this.
-                // std::cout << "remed = " << remed<< "proc = " << proc << "\t size of buffer = " << delta + 1 << std::endl;
+            } else { //  If an else has a brace on one side, it should have it on both... I don't like this.;
                 MPI_Send(&global_vec[0] + proc * delta + remed - 1, delta + 1, MPI_INT, proc, 0, MPI_COMM_WORLD);
             }
         }
@@ -66,11 +63,10 @@ int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
 
     int* local_vec;
 
-    const int n = (rank == 0) ? delta : (delta + 1 + size_t(rank <= remed));
-   // std::cout << "rank = " << rank << " n = " << n << "delta = "<<delta<<std::endl;
+    const int n = (rank == 0) ? delta : (delta + 1 + static_cast<int>(rank <= remed));
+    // std::cout << "rank = " << rank << " n = " << n << "delta = "<<delta<<std::endl;
     local_vec = new int[n];
     if (rank == 0) {
-        
         for (int i = 0; i < delta; ++i) {
             local_vec[i] = global_vec[i];
         }
@@ -81,9 +77,9 @@ int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
     MyPair global_res;
     MyPair local_res;
     
-  //  for (int i = 0; i < n; ++i) {
-  //     std::cout << rank << " el[" << i << "] = " << local_vec[i] << std::endl;
-  // }
+    //  for (int i = 0; i < n; ++i) {
+    //     std::cout << rank << " el[" << i << "] = " << local_vec[i] << std::endl;
+    // }
 
     local_res.diff = abs(local_vec[1] - local_vec[0]);
     local_res.indx = 0;
@@ -95,9 +91,8 @@ int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
         }
     }
     for (int i = 0; i < rank; ++i) { // Not the best way
-        local_res.indx += delta - int(i == 0) * 2 + int(i <= remed);
+        local_res.indx += delta - static_cast<int>(i == 0) * 2 + static_cast<int>(i <= remed);
     }
-    
     MPI_Reduce(&local_res, &global_res, 1, MPI_2INT, MPI_MAXLOC, 0, MPI_COMM_WORLD);
     delete[] local_vec;
     if (rank == 0) {

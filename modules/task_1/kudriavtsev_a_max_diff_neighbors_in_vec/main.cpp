@@ -15,7 +15,6 @@ TEST(Parallel_Operations_MPI, Test_20) {
     int global_res = getParallelOperations(global_vec, count_size_vector);
     if (rank == 0) {
         int reference_res = getSequentialOperations(global_vec, count_size_vector);
-        // std::cout << global_res << " " << reference_res << std::endl;
         ASSERT_EQ(reference_res, global_res);
     }
 }
@@ -31,7 +30,6 @@ TEST(Parallel_Operations_MPI, Test_100) {
     int global_res = getParallelOperations(global_vec, count_size_vector);
     if (rank == 0) {
         int reference_res = getSequentialOperations(global_vec, count_size_vector);
-        // std::cout << global_res << " " << reference_res << std::endl;
         ASSERT_EQ(reference_res, global_res);
     }
 }
@@ -47,7 +45,6 @@ TEST(Parallel_Operations_MPI, Test_1000) {
     int global_res = getParallelOperations(global_vec, count_size_vector);
     if (rank == 0) {
         int reference_res = getSequentialOperations(global_vec, count_size_vector);
-       // std::cout << global_res << " " << reference_res << std::endl;
         ASSERT_EQ(reference_res, global_res);
     }
 }
@@ -68,7 +65,7 @@ TEST(Parallel_Operations_MPI, Test_1001) {
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_2957) { // Simple Number
+TEST(Parallel_Operations_MPI, Test_2957) {  // Simple Number
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> global_vec;
