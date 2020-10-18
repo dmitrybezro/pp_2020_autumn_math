@@ -81,7 +81,7 @@ int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
             local_res.indx = i;
         }
     }
-    for (int i = 0; i < rank; ++i) { // Not the best way
+    for (int i = 0; i < rank; ++i) {  // Not the best way
         local_res.indx += delta - static_cast<int>(i == 0) * 2 + static_cast<int>(i <= remed);
     }
     MPI_Reduce(&local_res, &global_res, 1, MPI_2INT, MPI_MAXLOC, 0, MPI_COMM_WORLD);
