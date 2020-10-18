@@ -36,7 +36,6 @@ int getSequentialOperations(std::vector<int> vec, int n) {  // Is using  & LEGAL
 }
 
 int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
-
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -48,23 +47,19 @@ int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
 
     const int delta = count_size_vector / size;
     const int remed = count_size_vector % size;
-    
     if (rank == 0) {
         for (int proc = 1; proc < size; ++proc) {
             if (proc <= remed) {
-                // std::cout << "proc = " << proc << "\t size of buffer = " << delta + 2 << std::endl;
-                MPI_Send(&global_vec[0] + proc * delta + proc - 2, // Is using &global_vec[0] LEGAL? YES
-                    delta + 2, MPI_INT, proc, 0, MPI_COMM_WORLD); // MPI_Bcast (?) is faster
-            } else { //  If an else has a brace on one side, it should have it on both... I don't like this.;
+                MPI_Send(&global_vec[0] + proc * delta + proc - 2,  // Is using &global_vec[0] LEGAL? YES
+                    delta + 2, MPI_INT, proc, 0, MPI_COMM_WORLD);  // MPI_Bcast (?) is faster
+            } else {  //  If an else has a brace on one side, it should have it on both... I don't like this.;
                 MPI_Send(&global_vec[0] + proc * delta + remed - 1, delta + 1, MPI_INT, proc, 0, MPI_COMM_WORLD);
             }
         }
     }
 
     int* local_vec;
-
     const int n = (rank == 0) ? delta : (delta + 1 + static_cast<int>(rank <= remed));
-    // std::cout << "rank = " << rank << " n = " << n << "delta = "<<delta<<std::endl;
     local_vec = new int[n];
     if (rank == 0) {
         for (int i = 0; i < delta; ++i) {
@@ -76,10 +71,6 @@ int getParallelOperations(std::vector<int> global_vec, int count_size_vector) {
     }
     MyPair global_res;
     MyPair local_res;
-    
-    //  for (int i = 0; i < n; ++i) {
-    //     std::cout << rank << " el[" << i << "] = " << local_vec[i] << std::endl;
-    // }
 
     local_res.diff = abs(local_vec[1] - local_vec[0]);
     local_res.indx = 0;
