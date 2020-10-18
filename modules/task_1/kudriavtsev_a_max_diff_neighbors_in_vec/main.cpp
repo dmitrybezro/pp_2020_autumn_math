@@ -4,6 +4,22 @@
 #include <vector>
 #include "./ops_mpi.h"
 
+TEST(Parallel_Operations_MPI, Test_20) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<int> global_vec;
+    const int count_size_vector = 20;
+    if (rank == 0) {
+        global_vec = getRandomVector(count_size_vector);
+    }
+    int global_res = getParallelOperations(global_vec);
+    if (rank == 0) {
+        int reference_res = getSequentialOperations(global_vec);
+        std::cout << global_res << " " << reference_res << std::endl;
+        ASSERT_EQ(reference_res, global_res);
+    }
+}
+
 TEST(Parallel_Operations_MPI, Test_100) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);

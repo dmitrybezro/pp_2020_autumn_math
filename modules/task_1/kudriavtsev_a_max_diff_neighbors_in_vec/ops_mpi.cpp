@@ -63,22 +63,35 @@ int getParallelOperations(const std::vector<int>& global_vec) {
         }
     }
 
-    std::vector<int> local_vec(delta);
+    int* local_vec;
     if (rank == 0) {
-        local_vec = std::vector<int>(global_vec.begin(),
-                                     global_vec.begin() + delta);
+        local_vec = new int[delta];
+        for (int i = 0; i < delta; ++i) {
+            local_vec[i] = global_vec[i];
+        }
     } else {
         MPI_Status status;
-        local_vec.resize(delta + size_t(rank <= remed) + 1);
-        MPI_Recv(&local_vec[0], delta + size_t(rank > remed) + 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        local_vec = new int[delta + int(rank <= remed) + 1];
+        MPI_Recv(&local_vec[0], delta + int(rank > remed) + 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
     MyPair global_res;
-    auto local_res = getSequentialOperations(local_vec); // Is this LEGAL? IDK, but why not
+    MyPair local_res;
+    const int n = (rank == 0) ? delta : delta + 1 + int(rank > remed);
+    local_res.diff = abs(local_vec[1] - local_vec[0]);
+    local_res.indx = 0;
+    for (int i = 1; (i + 1) < n; ++i) {
+        int tmp = abs(local_vec[i + 1] - local_vec[i]);
+        if (tmp > local_res.diff) {
+            local_res.diff = tmp;
+            local_res.indx = i;
+        }
+    }
     
     MPI_Reduce(&local_res, &global_res, 1, MPI_2INT, MPI_MAXLOC, 0, MPI_COMM_WORLD);
+    delete[] local_vec;
     if (rank == 0) {
         t_e = MPI_Wtime();
         std::cout << "Parallel time: " << t_e - t_b << std::endl;
     }
-    return global_res.diff;
+    return global_res.indx;
 }
