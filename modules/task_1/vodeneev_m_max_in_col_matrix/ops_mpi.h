@@ -1,4 +1,6 @@
 // Copyright 2020 Vodeneev Mikhail
+#ifndef MODULES_TASK_1_VODENEEV_M_MAX_IN_COL_MATRIX_OPS_MPI_H_
+#define MODULES_TASK_1_VODENEEV_M_MAX_IN_COL_MATRIX_OPS_MPI_H_
 #include <vector>
 #include <string>
 
@@ -18,3 +20,4 @@ std::vector<double> getSeqOperations(std::vector<std::vector<double>> a);
 
 std::vector<double> getParallelOperations(std::vector<std::vector<double>> a,
      int m, int n);
+#endif  // MODULES_TASK_1_VODENEEV_M_MAX_IN_COL_MATRIX_OPS_MPI_H_
