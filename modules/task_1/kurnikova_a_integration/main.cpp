@@ -7,41 +7,51 @@
 TEST(Parallel_Operations_MPI, Test1) {
     int procrank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procrank);
-    double seqans = getSequentialOperations(f, 0, 5, 13);
     double parans = getParallelOperations(f, 0, 5, 13);
-    ASSERT_EQ(seqans, parans);
+    if (procrank == 0) {
+        double seqans = getSequentialOperations(f, 0, 5, 13);
+        ASSERT_EQ(seqans, parans);
+    }
 }
 
 TEST(Parallel_Operations_MPI, Test2) {
     int procrank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procrank);
-    double seqans = getSequentialOperations(f, -4, 0, 2);
     double parans = getParallelOperations(f, -4, 0, 2);
-    ASSERT_EQ(seqans, parans);
+    if (procrank == 0) {
+        double seqans = getSequentialOperations(f, -4, 0, 2);
+        ASSERT_EQ(seqans, parans);
+    }
 }
 
 TEST(Parallel_Operations_MPI, Test3) {
     int procrank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procrank);
-    double seqans = getSequentialOperations(f, 12, 12, 12);
     double parans = getParallelOperations(f, 12, 12, 12);
-    ASSERT_EQ(seqans, parans);
+    if (procrank == 0) {
+        double seqans = getSequentialOperations(f, 12, 12, 12);
+        ASSERT_EQ(seqans, parans);
+    }
 }
 
 TEST(Parallel_Operations_MPI, Test4) {
     int procrank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procrank);
-    double seqans = getSequentialOperations(f, 5, 20, 10);
     double parans = getParallelOperations(f, 5, 20, 10);
-    ASSERT_EQ(seqans, parans);
+    if (procrank == 0) {
+        double seqans = getSequentialOperations(f, 5, 20, 10);
+        ASSERT_EQ(seqans, parans);
+    }
 }
 
 TEST(Parallel_Operations_MPI, Test5) {
     int procrank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procrank);
-    double seqans = getSequentialOperations(f, 11, 15, 3);
     double parans = getParallelOperations(f, 11, 15, 3);
-    ASSERT_EQ(seqans, parans);
+    if (procrank == 0) {
+        double seqans = getSequentialOperations(f, 11, 15, 3);
+        ASSERT_EQ(seqans, parans);
+    }
 }
 
 int main(int argc, char** argv) {
