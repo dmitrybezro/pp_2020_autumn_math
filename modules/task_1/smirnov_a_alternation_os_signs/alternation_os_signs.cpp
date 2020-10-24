@@ -5,7 +5,7 @@
     #include <random>
     #include <ctime>
     #include <algorithm>
-    #include "./alternation_os_signs.h"
+    #include "../../../modules/task_1/smirnov_a_alternation_os_signs/alternation_os_signs.h"
 
     std::vector<int> getRandomVector(int sz) {
     std::mt19937 gen;
