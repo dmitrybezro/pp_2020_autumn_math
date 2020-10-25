@@ -8,6 +8,7 @@
 #include "../../../modules/task_1/smirnov_a_alternation_os_signs/alternation_os_signs.h"
 
 // #define ver 1
+// #define time true
 
 std::vector<int> getRandomVector(int sz) {
     std::mt19937 gen;
@@ -19,28 +20,35 @@ std::vector<int> getRandomVector(int sz) {
 
 int getSequentialOperations(std::vector<int> vec) {
     const int  sz = vec.size();
-    if (sz == 0) return 0;
-    double t1, t2;
+    if (sz <= 1) return 0;
     int change_of_sings = 0;
+#ifdef time
+    double t1, t2;
     t1 = MPI_Wtime();
+#endif  // time
     for (int i = 0; i < sz - 1; i++) {
         if (vec[i] * vec[i + 1] < 0) change_of_sings++;
     }
+#ifdef time
     t2 = MPI_Wtime();
     printf("time seq= %3.20f\n", t2 - t1);
+#endif  // time
     return change_of_sings;
 }
 
 int getParallelOperations(std::vector<int> global_vec,
     int count_size_vector) {
-    double t1, t2;
+    if (count_size_vector <= 1) return 0;
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int change_of_sings = 0;
     int local_count = 0;
+#ifdef time
+    double t1, t2;
     if (rank == 0)
         t1 = MPI_Wtime();
+#endif  // time
 #ifdef ver
 
     int* local_vec = new int[count_size_vector];
@@ -58,7 +66,7 @@ int getParallelOperations(std::vector<int> global_vec,
     MPI_Reduce(&local_count, &change_of_sings, 1, MPI_INT,
         MPI_SUM, 0, MPI_COMM_WORLD);
 
-#else
+#else  // ver
     const int delta = (count_size_vector - 1) / size;
     std::vector<int> local_vec(delta + 1);
     if (count_size_vector > size) {
@@ -86,9 +94,11 @@ int getParallelOperations(std::vector<int> global_vec,
         change_of_sings += local_count;
     }
 #endif
+#ifdef time
     if (rank == 0) {
         t2 = MPI_Wtime();
         printf("time par= %3.20f\n", t2 - t1);
     }
+#endif  // time
     return change_of_sings;
 }
