@@ -94,20 +94,20 @@ TEST(Parallel_Operations_MPI, Test_5000) {
 }
 TEST(Parallel_Operations_MPI, Test_10000000) {
     int rank;
-    double t1, t2;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> global_vec;
     const int count_size_vector = 100000000;
     int global_sum = 0;
     int reference_sum = 0;
-    int n = 101;  // count iteration (101)
-    std::vector<double> timePar(n, 0);
-    std::vector<double> timeSeq(n, 0);
 
     if (rank == 0) {
         global_vec = getRandomVector(count_size_vector);
     }
 #ifdef time101  // PAR
+    int n = 101;  // count iteration (101)
+    std::vector<double> timePar(n, 0);
+    std::vector<double> timeSeq(n, 0);
+    double t1, t2;
     for (int i = 0; i < n + 1; i++) {
         if (rank == 0)
             t1 = MPI_Wtime();
