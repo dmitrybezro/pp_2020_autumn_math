@@ -17,7 +17,7 @@ std::vector<int> getRandomMatrix(int row, int col) {
 }
 
 int getSequentialOperations(std::vector<int> Matr) {
-    int minimum = INT_MAX;
+    int minimum = Matr[0];
     int size = Matr.size();
     for (int i = 0; i < size; i++) {
         minimum = std::min(Matr[i], minimum);
