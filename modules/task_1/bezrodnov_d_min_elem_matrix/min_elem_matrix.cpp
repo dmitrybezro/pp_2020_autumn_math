@@ -26,7 +26,7 @@ int getSequentialOperations(std::vector<int> Matr) {
 }
 
 
-int getParallelOperations(std::vector<int> Matr, int row, int col) { 
+int getParallelOperations(std::vector<int> Matr, int rows, int cols) {
     int RANK;
     int SIZE;
 
