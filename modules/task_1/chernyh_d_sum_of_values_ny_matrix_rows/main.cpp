@@ -94,7 +94,7 @@ TEST(Parallel_Operations_MPI, Test_Sum_5) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> global_mat;
-  const int count_row = 10000, count_str = 10000;
+  const int count_row = 51, count_str = 43;
   if (rank == 0) {
     global_mat = getRandomMat(count_row, count_str);
   }
