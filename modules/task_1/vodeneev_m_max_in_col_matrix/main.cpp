@@ -50,11 +50,11 @@ TEST(Parallel_Operations_MPI, Test_Search_Max_100_50) {
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_Search_Max_999_999) {
+TEST(Parallel_Operations_MPI, Test_Search_Max_1001_999) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> test;
-    int m = 999;  // row
+    int m = 1001;  // row
     int n = 999;  // column
     if (rank == 0) {
         test = getRandomMatrix(m, n);
@@ -97,12 +97,12 @@ TEST(Parallel_Operations_MPI, Test_Search_Max_2000_2000) {
 }
 
 
-TEST(Parallel_Operations_MPI, Test_Search_Max_5000_5000) {
+TEST(Parallel_Operations_MPI, Test_Search_Max_2500_100) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<std::vector<double>> test;
-    int m = 5000;  // row
-    int n = 5000;  // column
+    int m = 2500;  // row
+    int n = 100;  // column
     if (rank == 0) {
         test = getRandomMatrix(m, n);
     }
