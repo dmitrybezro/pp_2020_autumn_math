@@ -66,7 +66,7 @@ int get_parallel_operations(std::vector<int> global_vec, int vec_size) {
     int local_sum = get_sequential_operations(local_vec);
 
     if (rank == 0) {
-        for (size_t i = 1; i < size; i++) {
+        for (int i = 1; i < size; i++) {
             if (i < k) {
                 if (global_vec[i * (delta + 1) - 1] > global_vec[i * (delta + 1)]) {
                     ++local_sum;
