@@ -18,11 +18,11 @@ TEST(Parallel_Operations_MPI, Test_task_1) {
     sleep_seconds(0.5);
     if (rank != 0) {
         if (rank %2 == 0) {
-            for (size_t i = 0; i < N1; i++) {
+            for (int i = 0; i < N1; i++) {
                 consume();
             }
         } else {
-            for (size_t i = 0; i < N2; i++) {
+            for (int i = 0; i < N2; i++) {
                 produce();
             }
         }
@@ -48,11 +48,11 @@ TEST(Parallel_Operations_MPI, Test_task_2) {
 
     if (rank != 0) {
         if (rank % 2 == 0) {
-            for (size_t i = 0; i < N1; i++) {
+            for (int i = 0; i < N1; i++) {
                 consume();
             }
         } else {
-            for (size_t i = 0; i < N2; i++) {
+            for (int i = 0; i < N2; i++) {
                 produce();
             }
         }
@@ -78,11 +78,11 @@ TEST(Parallel_Operations_MPI, Test_task_3) {
 
     if (rank != 0) {
         if (rank %2 == 0) {
-            for (size_t i = 0; i < N1; i++) {
+            for (int i = 0; i < N1; i++) {
                 consume();
             }
         } else {
-            for (size_t i = 0; i < N2; i++) {
+            for (int i = 0; i < N2; i++) {
                 produce();
             }
         }
@@ -107,11 +107,11 @@ TEST(Parallel_Operations_MPI, Test_task_4) {
 
     if (rank != 0) {
         if (rank %2 == 0) {
-            for (size_t i = 0; i < N1; i++) {
+            for (int i = 0; i < N1; i++) {
                 consume();
             }
         } else {
-            for (size_t i = 0; i < N2; i++) {
+            for (int i = 0; i < N2; i++) {
                 produce();
             }
         }
@@ -137,11 +137,11 @@ TEST(Parallel_Operations_MPI, Test_task_5) {
 
     if (rank != 0) {
         if (rank %2 == 0) {
-            for (size_t i = 0; i < N1; i++) {
+            for (int i = 0; i < N1; i++) {
                 consume();
             }
         } else {
-            for (size_t i = 0; i < N2; i++) {
+            for (int i = 0; i < N2; i++) {
                 produce();
             }
         }

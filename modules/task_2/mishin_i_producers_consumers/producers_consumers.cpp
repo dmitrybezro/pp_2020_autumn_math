@@ -16,17 +16,15 @@ void sleep_seconds(double seconds) {
 }
 
 int master(int loops) {
-    MPI_Request request, request2, requestSend;
-    MPI_Status status, status2;
-
+    MPI_Status status;
+    MPI_Request requestSend;
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    int flagPut = -1, flagGet = -1;
-    int res, res2;
+    int res;
     int last_consumer = -1;
-    double t1 = MPI_Wtime();
+
     std::cout << "START" << std::endl;
     std::queue<int> queue;
     while (loops != 0) {
