@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <math.h>
 #include "../../../modules/task_2/kolesnikov_g_reduce/reduce.h"
 int MPI_Reduce_My_Own(void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype,
     MPI_Op op, int root, MPI_Comm comm) {
@@ -13,11 +14,11 @@ int MPI_Reduce_My_Own(void *sendbuf, void *recvbuf, int count, MPI_Datatype data
     MPI_Comm_size(comm, &size);
     MPI_Comm_rank(comm, &rank);
     if (datatype == MPI_INT) {
-        std::memcpy(recvbuf, sendbuf, count * sizeof(int));
+        memcpy(recvbuf, sendbuf, count * sizeof(int));
     }
-    int level = log2(size + 1);
+    int level = log2f(size + 1);
     int cur_n = size;
-    int delta = pow(2, level - 1);
+    int delta = exp2(level - 1);
     if (cur_n != 2 * delta - 1) {
         if (rank >= 2 * delta - 1 && rank < cur_n) {
             MPI_Send(recvbuf, count, datatype, 2 * (2 * delta - 1) - rank - 1, 0, comm);
