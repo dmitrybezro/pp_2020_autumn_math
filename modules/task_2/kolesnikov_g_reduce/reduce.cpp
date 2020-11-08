@@ -1,11 +1,11 @@
 // Copyright 2020 Kolesnikov Gleb
 #include <mpi.h>
+#include <math.h>
 #include <string>
 #include <ctime>
 #include <vector>
 #include <algorithm>
 #include <iostream>
-#include <math.h>
 #include "../../../modules/task_2/kolesnikov_g_reduce/reduce.h"
 int MPI_Reduce_My_Own(void *sendbuf, void *recvbuf, int count, MPI_Datatype datatype,
     MPI_Op op, int root, MPI_Comm comm) {
