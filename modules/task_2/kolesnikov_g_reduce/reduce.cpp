@@ -1,7 +1,7 @@
 // Copyright 2020 Kolesnikov Gleb
 #include <mpi.h>
 #include <math.h>
-#include <string>
+#include <cstring>
 #include <ctime>
 #include <vector>
 #include <algorithm>
@@ -14,7 +14,7 @@ int MPI_Reduce_My_Own(void *sendbuf, void *recvbuf, int count, MPI_Datatype data
     MPI_Comm_size(comm, &size);
     MPI_Comm_rank(comm, &rank);
     if (datatype == MPI_INT) {
-        memcpy(recvbuf, sendbuf, count * sizeof(int));
+        std::memcpy(recvbuf, sendbuf, count * sizeof(int));
     }
     int level = log2f(size + 1);
     int cur_n = size;
