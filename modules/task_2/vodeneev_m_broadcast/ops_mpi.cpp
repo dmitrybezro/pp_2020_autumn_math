@@ -26,9 +26,9 @@ int Bcast(void* buffer, int count,
 
 
     if (root != 0) {
-        if (rank == root)
-           MPI_Send(buffer, count, datatype, 0, 0, MPI_COMM_WORLD);
-        else if (rank == 0) {
+        if (rank == root) {
+            MPI_Send(buffer, count, datatype, 0, 0, MPI_COMM_WORLD);
+        } else if (rank == 0) {
             MPI_Status status;
             MPI_Recv(buffer, count, datatype, root, 0, MPI_COMM_WORLD, &status);
         }
@@ -70,4 +70,3 @@ int Bcast(void* buffer, int count,
     }
     return 0;
 }
-

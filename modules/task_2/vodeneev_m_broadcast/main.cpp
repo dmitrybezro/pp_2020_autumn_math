@@ -11,7 +11,7 @@ TEST(Parallel_Operations_MPI, Test_1) {
     int n;
     if (rank == 0)
         n = 5;
-    int a = Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
     if (rank == 50)
     ASSERT_EQ(n, 5);
 }
@@ -26,7 +26,7 @@ TEST(Parallel_Operations_MPI, Test_2) {
             vec[i] = i;
         }
     }
-    int a = Bcast(vec.data(), 5, MPI_INT, 0, MPI_COMM_WORLD);
+    Bcast(vec.data(), 5, MPI_INT, 0, MPI_COMM_WORLD);
         ASSERT_EQ(vec[3], 3);
 }
 
@@ -41,7 +41,7 @@ TEST(Parallel_Operations_MPI, Test_3) {
             vec[i] = i;
         }
     }
-    int a = Bcast(vec.data(), 1000, MPI_INT, 0, MPI_COMM_WORLD);
+    Bcast(vec.data(), 1000, MPI_INT, 0, MPI_COMM_WORLD);
     ASSERT_EQ(vec[20], 20);
 }
 
@@ -55,7 +55,7 @@ TEST(Parallel_Operations_MPI, Test_4) {
             vec[i] = i;
         }
     }
-    int a = Bcast(vec.data(), 1000000, MPI_INT, 0, MPI_COMM_WORLD);
+    Bcast(vec.data(), 1000000, MPI_INT, 0, MPI_COMM_WORLD);
     ASSERT_EQ(vec[999], 999);
 }
 
@@ -69,7 +69,7 @@ TEST(Parallel_Operations_MPI, Test_5) {
             vec[i] = i;
         }
     }
-    int a = Bcast(vec.data(), 1000000, MPI_INT, 0, MPI_COMM_WORLD);
+    Bcast(vec.data(), 1000000, MPI_INT, 0, MPI_COMM_WORLD);
     ASSERT_EQ(vec[999], 999);
 }
 
