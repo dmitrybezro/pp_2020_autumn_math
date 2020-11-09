@@ -12,7 +12,6 @@ TEST(Parallel_Operations_MPI, Test_1) {
     if (rank == 0)
         n = 5;
     Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    if (rank == 50)
     ASSERT_EQ(n, 5);
 }
 
