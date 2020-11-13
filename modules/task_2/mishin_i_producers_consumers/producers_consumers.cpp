@@ -8,7 +8,7 @@
 #include <iostream>
 #include "../../../modules/task_2/mishin_i_producers_consumers/producers_consumers.h"
 
-double sleep_time = 0.5;
+double sleep_time = 0.01;
 
 void sleep_seconds(double seconds) {
     double t1 = MPI_Wtime();
