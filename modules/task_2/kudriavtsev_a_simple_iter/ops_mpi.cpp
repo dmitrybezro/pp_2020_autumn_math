@@ -100,8 +100,8 @@ std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double
         MPI_Allgatherv(x_proc, proc_size, MPI_DOUBLE, x.data(), sendcounts_b, displs_b, MPI_DOUBLE, MPI_COMM_WORLD);
         max_diff = 0.0;
         for (int i = 0; i < n; ++i) {  // Could be done in only one process, but...
-            if (abs(x[i] - tmp[i]) > max_diff) {
-                max_diff = abs(x[i] - tmp[i]);
+            if (fabs(x[i] - tmp[i]) > max_diff) {
+                max_diff = fabs(x[i] - tmp[i]);
             }
         }
         for (int i = 0; i < n; ++i) {
@@ -147,8 +147,8 @@ std::vector<double> sequentialIterMethod(std::vector<double> A, std::vector<doub
         }
         maxdiff = 0.0;
         for (int i = 0; i < n; ++i) {
-            if (abs(x[i] - tmp_arr[i]) > maxdiff) {
-                maxdiff = abs(x[i] - tmp_arr[i]);
+            if (fabs(x[i] - tmp_arr[i]) > maxdiff) {
+                maxdiff = fabs(x[i] - tmp_arr[i]);
             }
             tmp_arr[i] = x[i];
         }
@@ -167,8 +167,8 @@ double discrepancyNorm(const std::vector<double>& x, const std::vector<double>& 
         for (int j = 0; j < n; ++j) {
             tmp += A[i * n + j] * x[j];
         }
-        if (abs(tmp-b[i]) > dis) {
-            dis = abs(tmp-b[i]);
+        if (fabs(tmp-b[i]) > dis) {
+            dis = fabs(tmp-b[i]);
         }
     }
     return dis;
