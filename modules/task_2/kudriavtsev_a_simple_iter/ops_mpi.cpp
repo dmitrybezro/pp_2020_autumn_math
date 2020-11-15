@@ -125,7 +125,6 @@ std::vector<double> sequentialIterMethod(std::vector<double> A, std::vector<doub
     double t_b, t_e;  // Time of the Beginning and of the End...
     std::vector<double> x(n);
     double* tmp_arr = new double[n];
-    const int n2 = n * n;
     t_b = MPI_Wtime();
     for (int i = 0; i < n; ++i) {  // Preparations
         tmp_arr[i] = b[i] / A[i * n + i];
@@ -161,7 +160,7 @@ std::vector<double> sequentialIterMethod(std::vector<double> A, std::vector<doub
 }
 
 double discrepancyNorm(const std::vector<double>& x, const std::vector<double>& A, const std::vector<double>& b) {
-    const auto n = x.size();
+    const int n = x.size();
     double dis = 0.0;
     for (int i = 0; i < n; ++i) {
         double tmp = 0.0;
