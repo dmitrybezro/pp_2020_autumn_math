@@ -12,7 +12,6 @@ TEST(Parallel_Operations_MPI, Test_Seq_20) {
     const double eps = 0.001;
     std::vector<double> A;
     std::vector<double> b;
-    
     if (rank == 0) {
         A = getRandomMatrix(n);
         b = getRandomVector(n);

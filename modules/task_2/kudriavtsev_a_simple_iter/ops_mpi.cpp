@@ -7,7 +7,7 @@
 #include <iostream>
 #include "./ops_mpi.h"
 
-std::vector<double> getRandomVector(int n) { 
+std::vector<double> getRandomVector(int n) {
     std::vector<double> vec(n);
     double lower_bound = -100.0;  // Why?
     double upper_bound = 100.0;  // Why?
@@ -34,8 +34,7 @@ std::vector<double> getRandomMatrix(int n) {
     return vec;
 }
 
-std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double> b, int n, double eps, int NMax)
-{
+std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double> b, int n, double eps, int NMax) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -69,7 +68,7 @@ std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double
     double* x_proc = new double[proc_size];
     double* tmp = new double[n];
     MPI_Scatterv(A.data(), sendcounts_A, displs_A, MPI_DOUBLE, A_proc, proc_size * n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    if (rank == 0) {  // Preparation. Needs to be done in root process. 
+    if (rank == 0) {  // Preparation. Needs to be done in root process.
         for (int i = 0; i < n; ++i) {
             x[i] = tmp[i] = b[i] = b[i] / A[i * n + i];
         }
@@ -80,7 +79,7 @@ std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double
     // -- Actual Algorithm --
     for (int i = 0; i < proc_size; ++i) {
         for (int j = 0; j < n; ++j) {
-            if (j != i) 
+            if (j != i)
                 A_proc[i * n + j] = -(A_proc[i * n + j] / A_proc[i * n + i]);
         }
         A_proc[i * n + i] = 0.0;
@@ -100,7 +99,7 @@ std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double
         }
         MPI_Allgatherv(x_proc, proc_size, MPI_DOUBLE, x.data(), sendcounts_b, displs_b, MPI_DOUBLE, MPI_COMM_WORLD);
         max_diff = 0.0;
-        for (int i = 0; i < n; ++i) { // Could be done in only one process, but...
+        for (int i = 0; i < n; ++i) {  // Could be done in only one process, but...
             if (abs(x[i] - tmp[i]) > max_diff) {
                 max_diff = abs(x[i] - tmp[i]);
             }
@@ -110,7 +109,7 @@ std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double
         }
     } while (max_diff >= eps && iter_count < NMax);
     // -- Release RECOLLEC..HM! MEMORY --
-    delete[] A_proc;  //IDK Why everyone always forgets about delete.
+    delete[] A_proc;  // IDK Why everyone always forgets about delete.
     delete[] b_proc;
     delete[] x_proc;
     delete[] counts;
@@ -122,8 +121,7 @@ std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double
     return x;
 }
 
-std::vector<double> sequentialIterMethod(std::vector<double> A, std::vector<double> b, int n, double eps, int NMax)
-{
+std::vector<double> sequentialIterMethod(std::vector<double> A, std::vector<double> b, int n, double eps, int NMax) {
     double t_b, t_e;  // Time of the Beginning and of the End...
     std::vector<double> x(n);
     double* tmp_arr = new double[n];
@@ -133,14 +131,13 @@ std::vector<double> sequentialIterMethod(std::vector<double> A, std::vector<doub
         tmp_arr[i] = b[i] / A[i * n + i];
         b[i] = b[i] / A[i * n + i];
         for (int j = 0; j < n; ++j) {
-            if (j != i) 
+            if (j != i)
                 A[i * n + j] = -(A[i * n + j] / A[i * n + i]);
         }
         A[i * n + i] = 0.0;
     }
     int iter_count = 0;
     double maxdiff = 0.0;
-    
     do {  // rare case of using do ... while(...).
         ++iter_count;
         for (int i = 0; i < n; ++i) {  // Preparations
@@ -163,8 +160,7 @@ std::vector<double> sequentialIterMethod(std::vector<double> A, std::vector<doub
     return x;
 }
 
-double discrepancyNorm(const std::vector<double>& x, const std::vector<double>& A, const std::vector<double>& b)
-{
+double discrepancyNorm(const std::vector<double>& x, const std::vector<double>& A, const std::vector<double>& b) {
     const auto n = x.size();
     double dis = 0.0;
     for (int i = 0; i < n; ++i) {
