@@ -19,8 +19,9 @@ TEST(Parallel_Operations_MPI, Test_Seq_20) {
         double disp = discrepancyNorm(x, A, b);
         if (disp > 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
+        } else { 
+            ASSERT_EQ(true, disp < 1.0); 
         }
-        else ASSERT_EQ(true, disp < 1.0);
     }
 }
 
@@ -42,8 +43,9 @@ TEST(Parallel_Operations_MPI, Test_Par_20) {
         double disp = discrepancyNorm(x1, A, b);
         if (disp > 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
+        } else { 
+            ASSERT_EQ(true, disp < 1.0); 
         }
-        else ASSERT_EQ(true, disp < 1.0);
     }
 }
 
@@ -66,7 +68,9 @@ TEST(Parallel_Operations_MPI, Test_Par_40) {
         if (disp > 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
         }
-        else ASSERT_EQ(true, disp < 1.0);
+        else {
+            ASSERT_EQ(true, disp < 1.0);
+        }
     }
 }
 
@@ -88,8 +92,9 @@ TEST(Parallel_Operations_MPI, Test_Par_100) {
         double disp = discrepancyNorm(x, A, b);
         if (disp > 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
+        } else {
+            ASSERT_EQ(true, disp < 1.0);
         }
-        else ASSERT_EQ(true, disp < 1.0);
     }
 }
 
@@ -109,8 +114,9 @@ TEST(Parallel_Operations_MPI, Test_Seq_40) {
         double disp = discrepancyNorm(x, A, b);
         if (disp > 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
+        } else {
+            ASSERT_EQ(true, disp < 1.0);
         }
-        else ASSERT_EQ(true, disp < 1.0);
     }
 }
 
@@ -130,8 +136,9 @@ TEST(Parallel_Operations_MPI, Test_Seq_100) {
         double disp = discrepancyNorm(x, A, b);
         if (disp > 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
+        } else {
+            ASSERT_EQ(true, disp < 1.0);
         }
-        else ASSERT_EQ(true, disp < 1.0);
     }
 }
 
@@ -155,8 +162,7 @@ TEST(Parallel_Operations_MPI, Test_Seq_and_Par_100) {
         double disp2 = discrepancyNorm(x1, A, b);
         if (disp1 >= 1.0 && disp2 >= 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
-        }
-        else {
+        } else {
             ASSERT_EQ(true, disp1 < 1);
             ASSERT_EQ(true, disp2 < 1);
         }
@@ -183,8 +189,7 @@ TEST(Parallel_Operations_MPI, Test_Seq_and_Par_300) {
         double disp2 = discrepancyNorm(x1, A, b);
         if (disp1 >= 1.0 && disp2 >= 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
-        }
-        else {
+        } else {
             ASSERT_EQ(true, disp1 < 1);
             ASSERT_EQ(true, disp2 < 1);
         }
@@ -211,8 +216,7 @@ TEST(Parallel_Operations_MPI, Test_Seq_and_Par_727) {  // Simple Number
         double disp2 = discrepancyNorm(x1, A, b);
         if (disp1 >= 1.0 && disp2 >= 1.0) {
             std::cout << "Oh, ****, I'm sorry" << std::endl;
-        }
-        else {
+        } else {
             ASSERT_EQ(true, disp1 < 1);
             ASSERT_EQ(true, disp2 < 1);
         }
