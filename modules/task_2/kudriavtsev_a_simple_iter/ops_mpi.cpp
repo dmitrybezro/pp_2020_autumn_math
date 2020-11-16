@@ -99,11 +99,13 @@ std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double
         }
         MPI_Allgatherv(x_proc, proc_size, MPI_DOUBLE, x.data(), sendcounts_b, displs_b, MPI_DOUBLE, MPI_COMM_WORLD);
         max_diff = 0.0;
-        for (int i = 0; i < n; ++i) {  // Could be done in only one process, but...
-            if (fabs(x[i] - tmp[i]) > max_diff) {
-                max_diff = fabs(x[i] - tmp[i]);
+        double local_md = 0.0;
+        for (int i = 0; i < proc_size; ++i) {  // Could be done in one process or in all processes
+            if (fabs(x_proc[i] - tmp[displs_b[rank] + i]) > local_md) {
+                local_md = fabs(x_proc[i] - tmp[displs_b[rank] + i]);
             }
         }
+        MPI_Allreduce(&local_md, &max_diff, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
         for (int i = 0; i < n; ++i) {
             tmp[i] = x[i];
         }
@@ -155,7 +157,7 @@ std::vector<double> sequentialIterMethod(std::vector<double> A, std::vector<doub
     } while (maxdiff >= eps && iter_count < NMax);
     delete[] tmp_arr;
     t_e = MPI_Wtime();
-    std::cout << "Time of the Sequence :" << t_e - t_b << std::endl;
+    std::cout << "Sequential Time :" << t_e - t_b << std::endl;
     return x;
 }
 
