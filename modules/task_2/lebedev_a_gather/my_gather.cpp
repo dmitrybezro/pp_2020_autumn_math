@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <random>
+#include <cstring>
 #include <ctime>
 #include <algorithm>
 #include "../../../modules/task_2/lebedev_a_gather/my_gather.h"
