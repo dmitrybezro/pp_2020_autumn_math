@@ -48,8 +48,8 @@ void MatrixPermut(std::vector<double>* T, std::vector<double>* b, int count_row,
      std::swap(pb[j], pb[i]); }
   }
   }
-  std::vector<double> v1 (pT, pT+sizeof(pT)/sizeof(pT[0]));
-  std::vector<double> v2(pb, pb + sizeof(pb) / sizeof(pb[0]));
+  std::vector<double> v1(pT, pT + (count_str*count_row * sizeof(double)) / sizeof(double));
+  std::vector<double> v2(pb, pb + (count_str * sizeof(double)) / sizeof(double));
   T = &v1;
   b = &v2;
 }
@@ -58,7 +58,7 @@ void MatrixTransform(std::vector<double>* T, std::vector<double>* b, int count_r
   double *pT, *pb;
   pT = T->data();
   pb = b->data();
-  double kf = 0, sum = 0;
+  double kf = 0;
   for (int i = 0; i < count_str; i++) {
     for (int j = i + 1; j < count_str; j++) {
       if (pT[i*count_row + i] == 0) {
@@ -79,8 +79,8 @@ void MatrixTransform(std::vector<double>* T, std::vector<double>* b, int count_r
       }
     }
   }
-  std::vector<double> v1(pT, pT + sizeof(pT) / sizeof(pT[0]));
-  std::vector<double> v2(pb, pb + sizeof(pb) / sizeof(pb[0]));
+  std::vector<double> v1(pT, pT + (count_str*count_row*sizeof(double)) / sizeof(double));
+  std::vector<double> v2(pb, pb + (count_str*sizeof(double)) / sizeof(double));
   T = &v1;
   b = &v2;
 }
