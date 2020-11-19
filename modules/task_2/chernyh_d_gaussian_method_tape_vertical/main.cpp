@@ -4,7 +4,6 @@
 #include <vector>
 #include "./method_gauss.h"
 
-#define FLT_EPSILON 1.19209290E-07
 TEST(Parallel_Operations_MPI, Test_MethodGaussa1) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
