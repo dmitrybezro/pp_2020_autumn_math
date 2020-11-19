@@ -2,6 +2,7 @@
 #include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
 #include <vector>
+#include <algorithm>
 #include "./ops_mpi.h"
 
 TEST(Parallel_Operations_MPI, Test_Seq_20) {

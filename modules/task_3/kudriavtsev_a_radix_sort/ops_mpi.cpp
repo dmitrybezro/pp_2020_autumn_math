@@ -7,7 +7,7 @@
 #include <iostream>
 #include "./ops_mpi.h"
 
-std::vector<int> getRandomVector(int n, int mod) {  
+std::vector<int> getRandomVector(int n, int mod) {
     std::vector<int> vec(n);
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
@@ -39,8 +39,7 @@ int* merge(int* vec1, int n1, int* vec2, int n2) {
     return vec;
 }
 
-int* parallelRadixSort(int* vec, int n)
-{
+int* parallelRadixSort(int* vec, int n) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -67,13 +66,13 @@ int* parallelRadixSort(int* vec, int n)
     int s = size, m = 1;
     while (s > 1) {
         s = s / 2 + s % 2;
-        if ((rank - m) % (2 * m) == 0){
+        if ((rank - m) % (2 * m) == 0) {
             MPI_Send(&proc_size, 1, MPI_INT,
                 rank - m, 0, MPI_COMM_WORLD);
             MPI_Send(arr_proc, proc_size, MPI_INT,
                 rank - m, 0, MPI_COMM_WORLD);
         }
-        if ((rank % (2 * m) == 0) && ((size - rank) > m)){
+        if ((rank % (2 * m) == 0) && ((size - rank) > m)) {
             MPI_Status status;
             int k1;
             MPI_Recv(&k1, 1, MPI_INT,
@@ -89,9 +88,7 @@ int* parallelRadixSort(int* vec, int n)
     if (rank == 0) {
         for (int i = 0; i < n; ++i) {
             vec[i] = arr_proc[i];
-            //std::cout << arr_proc[i] << " ";
         }
-        //std::cout << '\n';
         t_e = MPI_Wtime();
         std::cout << "Parallel time: " << t_e - t_b << std::endl;
     }
@@ -99,8 +96,7 @@ int* parallelRadixSort(int* vec, int n)
     return vec;
 }
 
-int* radixSort(int vec[], int n)
-{
+int* radixSort(int vec[], int n) {
     int maxel = vec[0];
     const int power = 10;
     // --finding maximal element--
