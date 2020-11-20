@@ -4,7 +4,7 @@
 
 #include <vector>
 
-std::vector<int> getRandomVector(int n, int mod = 100'000);
+std::vector<int> getRandomVector(int n, int mod = 100000);
 int* radixSort(int vec[], int n);
 int* merge(int* vec1, int n1, int* vec2, int n2);
 int* parallelRadixSort(int* vec, int n);
