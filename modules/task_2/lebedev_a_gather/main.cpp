@@ -40,25 +40,22 @@ TEST(my_gather, Test_0_size) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    int count = 0;
+    int count = 1;
     int dest = 1;
     std::vector<int> sbuf(count);
     double start, stop;
     std::vector<int> rbuf1(count * size), rbuf2(count * size);
     start = MPI_Wtime();
-    MPI_Gather(&sbuf[0], count, MPI_INT, &rbuf1[0], count, MPI_INT, dest, MPI_COMM_WORLD);
+    MPI_Gather(&sbuf[0], 0, MPI_INT, &rbuf1[0], 0, MPI_INT, dest, MPI_COMM_WORLD);
     stop = MPI_Wtime();
     if (rank == 0) {
         printf("MPI_gather time: %f\n", stop - start);
     }
     start = MPI_Wtime();
-    my_gather(&sbuf[0], count, MPI_INT, &rbuf2[0], count, MPI_INT, dest, MPI_COMM_WORLD);
+    my_gather(&sbuf[0], 0, MPI_INT, &rbuf2[0], 0, MPI_INT, dest, MPI_COMM_WORLD);
     stop = MPI_Wtime();
     if (rank == dest) {
         printf("my_gather time: %f\n", stop - start);
-        for (int i = 0; i < count * size; i++) {
-            EXPECT_EQ(rbuf1[i], rbuf2[i]);
-        }
     }
 }
 
