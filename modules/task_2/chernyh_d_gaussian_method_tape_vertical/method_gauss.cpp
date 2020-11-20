@@ -187,11 +187,11 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
     int pos_max = -1;
     if (proc == rank) {
       int k = rank * delta;
-      for (int i = 0; i < static_cast<unsigned int>(local_mat.size() / count_str); i++) {
+      for (int i = 0; i < static_cast<int>(local_mat.size() / count_str); i++) {
         max = 0;
         for (int j = 0; j < count_str; j++) {
-          if (Iter[j] == -1 && fabs(max < local_mat[i*count_str + j])) {
-            max = local_mat[i*count_str + j];
+          if (Iter[j] == -1 && max < fabs(local_mat[i*count_str + j])) {
+            max = fabs(local_mat[i*count_str + j]);
             pos_max = j;
           }
         }
@@ -216,7 +216,7 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
       for (int proc_t = 0; proc_t < size_m; proc_t++) { if (proc_t != proc)
         MPI_Send(&delta, 1, MPI_INT, proc_t, 0, MPI_COMM_WORLD); }
       if (flag < delta_flag) {
-        for (int i = 0; i < static_cast<unsigned int>(local_mat.size() / count_str); i++) {
+        for (int i = 0; i < static_cast<int>(local_mat.size() / count_str); i++) {
           lp = LeadPos[flag];
           if (local_mat[i*count_str + lp] == 0) {
             f_swap = 1;
@@ -235,7 +235,7 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
             if (j != lp && local_mat[i*count_str + lp] != 0) {
               kf[j] = local_mat[i*count_str + j] / local_mat[i*count_str+lp];
               if (kf[j] != 0) {
-                for (int s =i; s < static_cast<unsigned int>(local_mat.size() / count_str); s++) {
+                for (int s =i; s < static_cast<int>(local_mat.size() / count_str); s++) {
                   local_mat[s*count_str + j] -= local_mat[s*count_str+lp] * kf[j]; }
                 b[j] -= b[lp] * kf[j];
               }
@@ -262,7 +262,7 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
       while (f < num) {
         MPI_Recv(&lp, 1, MPI_INT, proc, 1, MPI_COMM_WORLD, &status1);
         MPI_Recv(&kf[0], count_str, MPI_DOUBLE, proc, 2, MPI_COMM_WORLD, &status2);
-        for (int i = 0; i < static_cast<unsigned int>(local_mat.size() / count_str); i++) {
+        for (int i = 0; i < static_cast<int>(local_mat.size() / count_str); i++) {
           for (int j = 0; j < count_str; j++) {
             if (j != lp) {
               if (kf[j] != 0) {
@@ -295,7 +295,7 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
         delta_flag = count_str;
       }
       if (flag_rez < delta_flag) {
-        for (int i = 0; i < static_cast<unsigned int>(rez.size()); i++) {
+        for (int i = 0; i < static_cast<int>(rez.size()); i++) {
           lp_rez = LeadPos[flag_rez];
           if (b[lp_rez] != 0 && local_mat[i*count_str + lp_rez] == 0) {
             throw "incompatible slay";

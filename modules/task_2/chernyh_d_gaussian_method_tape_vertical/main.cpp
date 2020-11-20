@@ -195,7 +195,7 @@ TEST(Parallel_Operations_MPI, Test_MethodGaussa2) {
   TEST(Parallel_Operations_MPI, Test_MethodGaussa5) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  const int count_row = 100, count_str = 100;
+  const int count_row = 25, count_str = 25;
   std::vector<double> matrix(count_row*count_str, 0), b(count_str, 0), x1(count_row, 0), x2(count_row, 0);
   double time1, time2, time3, time4, t_res1, t_res2, error1, error2;
   if (rank == 0) {
