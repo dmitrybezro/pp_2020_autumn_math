@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/allnes/pp_2020_autumn_math.svg?branch=master)](https://travis-ci.com/allnes/pp_2020_autumn_math)
 ![Build application](https://github.com/allnes/pp_2020_autumn_math/workflows/Build%20application/badge.svg?branch=master)
+[![deepcode](https://www.deepcode.ai/api/gh/badge?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybTEiOiJnaCIsIm93bmVyMSI6ImFsbG5lcyIsInJlcG8xIjoicHBfMjAyMF9hdXR1bW5fbWF0aCIsImluY2x1ZGVMaW50IjpmYWxzZSwiYXV0aG9ySWQiOjI0ODQyLCJpYXQiOjE2MDU0NTQ0NzB9.029ZqZmEILwClobUE-yyr-WPdXWG8RnRCr5xUEvM_AA)](https://www.deepcode.ai/app/gh/allnes/pp_2020_autumn_math/_/dashboard?utm_content=gh%2Fallnes%2Fpp_2020_autumn_math)
 
 ### Upd 09.10.2020: Репозиторий до 18 октября находится в тестовом режиме - могут быть внесены новые изменения и проверки!!!
 ### Upd 19.10.2020: Репозиторий на неопределенное время находится в тестовом режиме - могут быть внесены новые изменения и проверки!!! Следите за обновлениями.
