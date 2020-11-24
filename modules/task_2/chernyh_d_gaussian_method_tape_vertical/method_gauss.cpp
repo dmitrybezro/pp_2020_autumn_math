@@ -13,14 +13,14 @@ std::vector<double> getRandomMat(int count_row, int count_str) {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
   std::vector<double> A(count_row*count_str);
-  for (int i = 0; i < count_row*count_str; i++) {A[i]= gen() % 9 + 3; }
+  for (int i = 0; i < count_row*count_str; i++) { A[i]= gen() % 9 + 3; }
   return A;
 }
 std::vector<double> getRandomRes(int count_str) {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
   std::vector<double> b(count_str);
-  for (int i = 0; i < count_str; i++) {b[i]= gen() % 9 + 1; }
+  for (int i = 0; i < count_str; i++) { b[i]= gen() % 9 + 1; }
   return b;
 }
 std::vector<double> Transpose(std::vector<double> A, int count_row, int count_str) {
@@ -105,6 +105,9 @@ double SolutionCheck(std::vector<double> A, std::vector<double> b,
 std::vector<double> getSequentialMethod(std::vector<double> A, std::vector<double> b, int count_row, int count_str) {
   std::vector<double> x(count_row, 0);
   double sum = 0;
+  if (count_str != count_row || count_str <= 0) {
+    throw std::runtime_error("Wrong size");
+  }
   MatrixPermut(&A, &b, count_row, count_str);
   // calculate coeff
   MatrixTransform(&A, &b, count_row, count_str);
@@ -112,20 +115,13 @@ std::vector<double> getSequentialMethod(std::vector<double> A, std::vector<doubl
   // calculate x
   for (int i = count_row - 1; i >= 0; i--) {
     sum = 0;
-    try {
-      if (b[i] != 0 && A[i*count_row + i] == 0) {
-        throw -1;
-        break;
-      } else {
-          for (int j = i; j < count_str; j++) {
-            sum += x[j] * A[i*count_row + j];
-            x[i] = (b[i] - sum) / A[i*count_row + i];
-          }
-      }
-    }
-    catch (int) {
-      throw "incompatible slay";
-      break;
+    if (b[i] != 0 && A[i*count_row + i] == 0) {
+      throw std::runtime_error("Inconistent system");
+    } else {
+        for (int j = i; j < count_str; j++) {
+          sum += x[j] * A[i*count_row + j];
+          x[i] = (b[i] - sum) / A[i*count_row + i];
+        }
     }
   }
   return x;
@@ -133,41 +129,43 @@ std::vector<double> getSequentialMethod(std::vector<double> A, std::vector<doubl
 
 std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vector<double> b,
     int count_row, int count_str) {
-  int size, rank, size_m;
-  int *Iter, *LeadPos;
+  int size, rank, size_m, code = 0;
+  std::vector<int> Iter(count_str, -1);
+  std::vector<int> LeadPos(count_str, -1);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   size_m = size;
   int delta = count_row / size;
   int outdelta = count_row % size;
+  if (count_str != count_row || count_str <= 0) {
+    code = -1;
+    MPI_Bcast(&code, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  }
+  if (code != 0) {
+    throw std::runtime_error("Wrong size");
+  }
   std::vector<double> global_mat_t(count_row*count_str, 0);
   if (size > count_row) {
     size_m = count_row;
     delta = 1;
     outdelta = 0;
   }
-  Iter = new int[count_str];
-  LeadPos = new int[count_str];
-  for (int i = 0; i < count_str; i++) {
-    Iter[i] = -1;
-    LeadPos[i] = -1;
-  }
   if (rank == 0) {
     global_mat_t = Transpose(global_mat, count_row, count_str);
     for (int proc = 1; proc < size; proc++) {
-      if (outdelta != 0 && proc == size_m - 1) {  //  last rank take ostatok
+      if (outdelta != 0 && proc == size_m - 1) {
         MPI_Send(&global_mat_t[0] + proc * delta*count_str, (delta + outdelta)*count_str,
           MPI_DOUBLE, proc, 0, MPI_COMM_WORLD);
-  } else {
-    if (proc >= count_row) {
-      MPI_Send(&global_mat_t[0] + (count_row - 1) * delta*count_str, delta*count_str,
-        MPI_DOUBLE, proc, 0, MPI_COMM_WORLD);
-    } else {
-      MPI_Send(&global_mat_t[0] + proc * delta*count_str, delta*count_str,
-        MPI_DOUBLE, proc, 0, MPI_COMM_WORLD);
-  }
-  }
-  }
+      } else {
+          if (proc >= count_row) {
+            MPI_Send(&global_mat_t[0] + (count_row - 1) * delta*count_str, delta*count_str,
+              MPI_DOUBLE, proc, 0, MPI_COMM_WORLD);
+          } else {
+              MPI_Send(&global_mat_t[0] + proc * delta*count_str, delta*count_str,
+                MPI_DOUBLE, proc, 0, MPI_COMM_WORLD);
+          }
+      }
+    }
   }
   MPI_Bcast(&b[0], count_str, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   std::vector<double> local_mat(delta*count_str, 0);
@@ -179,7 +177,7 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
         local_mat.resize((delta + outdelta)*count_str);
         MPI_Recv(&local_mat[0], (delta + outdelta)*count_str, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
       } else {
-        MPI_Recv(&local_mat[0], delta*count_str, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
+          MPI_Recv(&local_mat[0], delta*count_str, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
       }
   }
   for (int proc = 0; proc < size_m; proc++) {
@@ -195,7 +193,7 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
             pos_max = j;
           }
         }
-        if (Iter[pos_max] == -1 && max == local_mat[i*count_str + pos_max]) {
+        if (Iter[pos_max] == -1 && max == fabs(local_mat[i*count_str + pos_max])) {
           Iter[pos_max] = k + i;
           LeadPos[Iter[pos_max]] = pos_max;
         }
@@ -213,30 +211,32 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
       delta = local_mat.size() / count_str;
       delta_flag = (rank + 1)*delta;
       if (outdelta != 0 && rank == size_m - 1) { delta_flag = count_str; }
-      for (int proc_t = 0; proc_t < size_m; proc_t++) { if (proc_t != proc)
-        MPI_Send(&delta, 1, MPI_INT, proc_t, 0, MPI_COMM_WORLD); }
+      for (int proc_t = 0; proc_t < size_m; proc_t++) {
+        if (proc_t != proc)
+          MPI_Send(&delta, 1, MPI_INT, proc_t, 0, MPI_COMM_WORLD);
+      }
       if (flag < delta_flag) {
         for (int i = 0; i < static_cast<int>(local_mat.size() / count_str); i++) {
           lp = LeadPos[flag];
           if (local_mat[i*count_str + lp] == 0) {
             f_swap = 1;
-            while (local_mat[i*count_str + lp] == 0 && flag < count_str-1) {
+            while (local_mat[i*count_str + lp] == 0 && flag < count_str - 1) {
               std::swap(LeadPos[flag], LeadPos[flag + 1]);
               lp = LeadPos[flag];
             }
             for (int proc_t = 0; proc_t < size_m; proc_t++) {
-              if (proc_t != proc) {
+              if (proc_t != proc)
                 MPI_Send(&LeadPos[0], count_str, MPI_DOUBLE, proc_t, 3, MPI_COMM_WORLD);
-              }
             }
           }
           for (int p = 0; p < count_str; p++) kf[p] = 0;
           for (int j = 0; j < count_str; j++) {
             if (j != lp && local_mat[i*count_str + lp] != 0) {
-              kf[j] = local_mat[i*count_str + j] / local_mat[i*count_str+lp];
+              kf[j] = local_mat[i*count_str + j] / local_mat[i*count_str + lp];
               if (kf[j] != 0) {
-                for (int s =i; s < static_cast<int>(local_mat.size() / count_str); s++) {
-                  local_mat[s*count_str + j] -= local_mat[s*count_str+lp] * kf[j]; }
+                for (int s = i; s < static_cast<int>(local_mat.size() / count_str); s++) {
+                  local_mat[s*count_str + j] -= local_mat[s*count_str + lp] * kf[j];
+                }
                 b[j] -= b[lp] * kf[j];
               }
             }
@@ -244,8 +244,9 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
           for (int proc_t = 0; proc_t < size_m; proc_t++) {
             if (proc_t != proc) {
               MPI_Send(&lp, 1, MPI_INT, proc_t, 1, MPI_COMM_WORLD);
-              MPI_Send(&kf[0], count_str, MPI_DOUBLE, proc_t, 2, MPI_COMM_WORLD); }
+              MPI_Send(&kf[0], count_str, MPI_DOUBLE, proc_t, 2, MPI_COMM_WORLD);
             }
+          }
           flag++;
         }
       }
@@ -298,24 +299,28 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
         for (int i = 0; i < static_cast<int>(rez.size()); i++) {
           lp_rez = LeadPos[flag_rez];
           if (b[lp_rez] != 0 && local_mat[i*count_str + lp_rez] == 0) {
-            throw "incompatible slay";
+            code = -1;
             break;
           } else {
-            rez[i] = b[lp_rez] / local_mat[i*count_str + lp_rez];
+              rez[i] = b[lp_rez] / local_mat[i*count_str + lp_rez];
           }
           flag_rez++;
         }
       }
     }
-    if (rank >= size_m) {
-      lp_rez = LeadPos[count_str-1];
+    if (rank >= size_m && code != -1) {
+      lp_rez = LeadPos[count_str - 1];
       rez[0] = b[lp_rez] / local_mat[lp_rez];
     }
     MPI_Bcast(&flag_rez, 1, MPI_INT, proc, MPI_COMM_WORLD);
+    MPI_Bcast(&code, 1, MPI_INT, proc, MPI_COMM_WORLD);
+  }
+  if (code == -1) {
+    throw std::runtime_error("Inconistent system");
   }
   std::vector<double> global_rez(count_row, 0);
-  int *recvcount = new int[size];
-  int *displs = new int[size];
+  std::vector<int> recvcount(size, 0);
+  std::vector<int> displs(size, 0);
   for (int i = 0; i < size; i++) {
     if (i >= count_str) {
       recvcount[i] = delta;
@@ -328,10 +333,7 @@ std::vector<double> getParallelMethod(std::vector<double> global_mat, std::vecto
       displs[i] = i * delta;
     }
   }
-  MPI_Gatherv(&rez[0], rez.size(), MPI_DOUBLE, &global_rez[0], recvcount, displs, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  delete[]recvcount;
-  delete[]displs;
-  delete[] Iter;
-  delete[]LeadPos;
+  MPI_Gatherv(&rez[0], rez.size(), MPI_DOUBLE, &global_rez[0], &recvcount[0],
+               &displs[0], MPI_DOUBLE, 0, MPI_COMM_WORLD);
   return global_rez;
 }
