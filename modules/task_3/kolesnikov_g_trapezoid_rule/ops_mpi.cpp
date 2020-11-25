@@ -3,6 +3,7 @@
 #include "./ops_mpi.h"
 #include <mpi.h>
 #include <cstring>
+#include <cmath>
 #include <vector>
 #include <iostream>
 
@@ -20,7 +21,7 @@ double SequentialIntegr_smart(double(*func)(std::vector<double>), std::vector <d
     std::vector <double> segments1(dimension);
     double result = 0.0;
     int m = n + 1;
-    int num = pow(n + 1, dimension);
+    int num = std::pow(n + 1, dimension);
     for (int i = 0; i < num; ++i) {
         borderCounter = 0;
         segments1[0] = x[0] + h[0] * (i % m);
@@ -30,7 +31,7 @@ double SequentialIntegr_smart(double(*func)(std::vector<double>), std::vector <d
             if (segments1[j] == x[j] || segments1[j] == y[j])
                 borderCounter++;
         }
-        result += func(segments1) / pow(2, borderCounter);
+        result += func(segments1) / std::pow(2, borderCounter);
     }
     for (int i = 0; i < dimension; ++i) {
         result *= h[i];
@@ -45,7 +46,7 @@ double trapezoidParallelRule(double(*func)(std::vector<double>), std::vector <do
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int m = n + 1;
     int dimension = 3;
-    int num = pow(m, dimension);
+    int num = std::pow(m, dimension);
     int locstart, locend;
     int delta = num / size;
     int rem = num % size;
@@ -73,7 +74,7 @@ double trapezoidParallelRule(double(*func)(std::vector<double>), std::vector <do
             if (point[j] == start_coords[j] || point[j] == end_coords[j])
                 borderCounter++;
         }
-        locres += func(point) / pow(2, borderCounter);
+        locres += func(point) / std::pow(2, borderCounter);
     }
     MPI_Reduce(&locres, &res, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     res *= h[0] * h[1] * h[2];
