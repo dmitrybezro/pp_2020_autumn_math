@@ -9,9 +9,10 @@ TEST(Parallel_Operations_MPI, Test_1) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> vec(10), vec_res(10);
+    int size_vec = vec.size();
     if (rank == 0) {
         int k = vec.size();
-        for (int i = 0; i < vec.size(); i++) {
+        for (int i = 0; i < size_vec; i++) {
             vec[i] = k;
             k--;
         }
@@ -35,9 +36,10 @@ TEST(Parallel_Operations_MPI, Test_2) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> vec(100), vec_res(100);
+    int size_vec = vec.size();
     if (rank == 0) {
         int k = vec.size();
-        for (int i = 0; i < vec.size(); i++) {
+        for (int i = 0; i < size_vec; i++) {
             vec[i] = k;
             k--;
         }
@@ -61,9 +63,10 @@ TEST(Parallel_Operations_MPI, Test_3) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> vec(10000), vec_res(10000);
+    int size_vec = vec.size();
     if (rank == 0) {
         int k = vec.size();
-        for (int i = 0; i < vec.size(); i++) {
+        for (int i = 0; i < size_vec; i++) {
             vec[i] = k;
             k--;
         }
@@ -87,9 +90,10 @@ TEST(Parallel_Operations_MPI, Test_4) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> vec(100000), vec_res(100000);
+    int size_vec = vec.size();
     if (rank == 0) {
         int k = vec.size();
-        for (int i = 0; i < vec.size(); i++) {
+        for (int i = 0; i < size_vec; i++) {
             vec[i] = k;
             k--;
         }
@@ -113,9 +117,10 @@ TEST(Parallel_Operations_MPI, Test_5) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int> vec(10000000), vec_res(10000000);
+    int size_vec = vec.size();
     if (rank == 0) {
         int k = vec.size();
-        for (int i = 0; i < vec.size(); i++) {
+        for (int i = 0; i < size_vec; i++) {
             vec[i] = k;
             k--;
         }
