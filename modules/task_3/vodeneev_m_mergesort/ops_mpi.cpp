@@ -97,7 +97,7 @@ std::vector<int> mergesort(std::vector<int> vec) {
                 MPI_INT, rank + k, 0, MPI_COMM_WORLD, &status2);
             local_vec_res = merge(local_vec, local_vec_2);
             local_vec.resize(n + local_size);
-            for (int i = 0; i < n + local_size; i ++) {
+            for (int i = 0; i < n + local_size; ++i) {
                 local_vec[i] = local_vec_res[i];
             }
             n = n + local_size;
