@@ -20,10 +20,10 @@ TEST(Parallel_Operations_MPI, Test_1) {
     double time1 = MPI_Wtime();
     vec_res = mergesort(vec);
     double time2 = MPI_Wtime();
-    double time_res1 = time2 - time1;
     if (rank == 0) {
+        double time_res1 = time2 - time1;
         double time3 = MPI_Wtime();
-        qsort(vec.data(), vec.size(), sizeof(vec[0]), compare);
+        quicksort(&vec, 0, size_vec - 1);
         double time4 = MPI_Wtime();
         double time_res2 = time4 - time3;
         std::cout << time_res1 << ' ' << time_res2 << std :: endl;
@@ -47,10 +47,10 @@ TEST(Parallel_Operations_MPI, Test_2) {
     double time1 = MPI_Wtime();
     vec_res = mergesort(vec);
     double time2 = MPI_Wtime();
-    double time_res1 = time2 - time1;
     if (rank == 0) {
+        double time_res1 = time2 - time1;
         double time3 = MPI_Wtime();
-        qsort(vec.data(), vec.size(), sizeof(vec[0]), compare);
+        quicksort(&vec, 0, size_vec - 1);
         double time4 = MPI_Wtime();
         double time_res2 = time4 - time3;
         std::cout << time_res1 << ' ' << time_res2 << std::endl;
@@ -74,10 +74,10 @@ TEST(Parallel_Operations_MPI, Test_3) {
     double time1 = MPI_Wtime();
     vec_res = mergesort(vec);
     double time2 = MPI_Wtime();
-    double time_res1 = time2 - time1;
     if (rank == 0) {
+        double time_res1 = time2 - time1;
         double time3 = MPI_Wtime();
-        qsort(vec.data(), vec.size(), sizeof(vec[0]), compare);
+        quicksort(&vec, 0, size_vec - 1);
         double time4 = MPI_Wtime();
         double time_res2 = time4 - time3;
         std::cout << time_res1 << ' ' << time_res2 << std::endl;
@@ -101,10 +101,10 @@ TEST(Parallel_Operations_MPI, Test_4) {
     double time1 = MPI_Wtime();
     vec_res = mergesort(vec);
     double time2 = MPI_Wtime();
-    double time_res1 = time2 - time1;
     if (rank == 0) {
+        double time_res1 = time2 - time1;
         double time3 = MPI_Wtime();
-        qsort(vec.data(), vec.size(), sizeof(vec[0]), compare);
+        quicksort(&vec, 0, size_vec - 1);
         double time4 = MPI_Wtime();
         double time_res2 = time4 - time3;
         std::cout << time_res1 << ' ' << time_res2 << std::endl;
@@ -116,7 +116,7 @@ TEST(Parallel_Operations_MPI, Test_5) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int> vec(10000000), vec_res(10000000);
+    std::vector<int> vec(4000000), vec_res(4000000);
     int size_vec = vec.size();
     if (rank == 0) {
         int k = vec.size();
@@ -128,10 +128,10 @@ TEST(Parallel_Operations_MPI, Test_5) {
     double time1 = MPI_Wtime();
     vec_res = mergesort(vec);
     double time2 = MPI_Wtime();
-    double time_res1 = time2 - time1;
     if (rank == 0) {
+        double time_res1 = time2 - time1;
         double time3 = MPI_Wtime();
-        qsort(vec.data(), vec.size(), sizeof(vec[0]), compare);
+        quicksort(&vec, 0, size_vec - 1);
         double time4 = MPI_Wtime();
         double time_res2 = time4 - time3;
         std::cout << time_res1 << ' ' << time_res2 << std::endl;

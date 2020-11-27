@@ -12,6 +12,29 @@ int compare(const void* x1, const void* x2) {
         - *(static_cast<const int*>(x2));
 }
 
+void quicksort(std::vector<int>* Arr, int first, int last) {
+    int mid, tmp;
+    int f = first, l = last;
+    mid = (*Arr)[(f + l) / 2];
+    do {
+        while ((*Arr)[f] < mid)
+            f++;
+        while ((*Arr)[l] > mid)
+            l--;
+        if (f <= l) {
+            tmp = (*Arr)[f];
+            (*Arr)[f] = (*Arr)[l];
+            (*Arr)[l] = tmp;
+            f++;
+            l--;
+        }
+    } while (f < l);
+    if (first < l)
+        quicksort(Arr, first, l);
+    if (f < last)
+        quicksort(Arr, f, last);
+}
+
 std::vector<int> merge(std::vector<int> a, std::vector<int> b) {
     int size1 = a.size();
     int size2 = b.size();
@@ -50,6 +73,14 @@ std::vector<int> mergesort(std::vector<int> vec) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int delta = vec.size() / size;
     int delta_over = vec.size() % size;
+    if (delta == 0) {
+        std::vector<int> er(vec.size());
+        size = vec.size();
+        delta = 1;
+        delta_over = 0;
+        if (rank >= size)
+            return er;
+    }
     int delta_over2 = delta_over;
     if (rank != size - 1 || rank == 0)
         delta_over = 0;
@@ -65,14 +96,12 @@ std::vector<int> mergesort(std::vector<int> vec) {
     std::vector<int> local_vec(delta + delta_over);
     if (rank == 0) {
         local_vec = std::vector<int>(vec.begin(), vec.begin() + delta);
-        qsort(local_vec.data(), local_vec.size(),
-            sizeof(local_vec[0]), compare);
+        quicksort(&local_vec, 0, local_vec.size() - 1);
     } else {
         MPI_Status status;
         MPI_Recv(local_vec.data(), delta + delta_over,
             MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
-        qsort(local_vec.data(), local_vec.size(),
-            sizeof(local_vec[0]), compare);
+        quicksort(&local_vec, 0, local_vec.size() - 1);
     }
 
     int sizetmp = size;
@@ -91,20 +120,13 @@ std::vector<int> mergesort(std::vector<int> vec) {
             int local_size;
             MPI_Recv(&local_size, 1, MPI_INT, rank + k,
                 0, MPI_COMM_WORLD, &status1);
-            std::vector <int> local_vec_2(local_size),
-                local_vec_res(local_size + local_vec.size());
+            std::vector <int> local_vec_2(local_size);
             MPI_Recv(local_vec_2.data(), local_size,
                 MPI_INT, rank + k, 0, MPI_COMM_WORLD, &status2);
-            local_vec_res = merge(local_vec, local_vec_2);
-            local_vec.resize(n + local_size);
-            for (int i = 0; i < n + local_size; ++i) {
-                local_vec[i] = local_vec_res[i];
-            }
+            local_vec = merge(local_vec, local_vec_2);
             n = n + local_size;
         }
         k = 2 * k;
     }
-    if (rank != 0)
-        local_vec.resize(vec.size());
     return local_vec;
 }
