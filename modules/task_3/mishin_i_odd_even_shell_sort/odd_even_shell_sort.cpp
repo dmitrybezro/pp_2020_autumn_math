@@ -7,12 +7,13 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <cstring>
 #include "../../../modules/task_3/mishin_i_odd_even_shell_sort/odd_even_shell_sort.h"
 
 template <class Item>
 void batchersort(Item* a, int l, int r) {
 int N = r-l;
-        for (int p = 1; p < N; p += p)
+        for (int p = 1; p < N; p *= 2)
             for (int k = p; k > 0; k /= 2)
                 for (int j = k % p; j + k < N; j += (k + k))
                     for (int i = 0; i < N - j - k; i++)
@@ -51,7 +52,7 @@ int* parallel_shell_sort(int* container, int array_size) {
 
     if (rank == 0) {
         int dif = 0;
-        for (size_t i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             sendcounts[i] = (i < n% size) ? (n / size + 1) : (n / size);
             displs[i] = dif;
             dif += (i < n% size) ? (n / size + 1) : (n / size);
