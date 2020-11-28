@@ -17,7 +17,7 @@ TEST(Parallel_Operations_MPI, Test_create_topology) {
 
     std::vector<int> dims(ndims), periods(ndims), coords(ndims);
     MPI_Cart_get(comm_cart, ndims, dims.data(), periods.data(), coords.data());
-    ASSERT_TRUE(true, periods[0] && periods[1]);
+    EXPECT_TRUE(periods[0] & periods[1]);
 }
 
 TEST(Parallel_Operations_MPI, Test_send_from1_toLast) {
