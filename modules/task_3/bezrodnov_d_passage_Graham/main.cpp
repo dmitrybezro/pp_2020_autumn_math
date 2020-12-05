@@ -10,7 +10,7 @@ TEST(Parallel_Operations_MPI, Cloud_10_point) {
     int size = 10;
     std::vector<point> cloud;
     if (RANK == 0) {
-    	cloud = getRandomCloud(size);
+        cloud = getRandomCloud(size);
     }
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
@@ -27,7 +27,7 @@ TEST(Parallel_Operations_MPI, Cloud_57_point) {
     int size = 57;
     std::vector<point> cloud;
     if (RANK == 0) {
-    	cloud = getRandomCloud(size);
+        cloud = getRandomCloud(size);
     }
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
@@ -44,7 +44,7 @@ TEST(Parallel_Operations_MPI, Cloud_101_point) {
     int size = 101;
     std::vector<point> cloud;
     if (RANK == 0) {
-    	cloud = getRandomCloud(size);
+        cloud = getRandomCloud(size);
     }
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
@@ -61,7 +61,7 @@ TEST(Parallel_Operations_MPI, Cloud_203_point) {
     int size = 203;
     std::vector<point> cloud;
     if (RANK == 0) {
-    	cloud = getRandomCloud(size);
+        cloud = getRandomCloud(size);
     }
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
@@ -78,7 +78,7 @@ TEST(Parallel_Operations_MPI, Cloud_256_point) {
     int size = 256;
     std::vector<point> cloud;
     if (RANK == 0) {
-    	cloud = getRandomCloud(size);
+        cloud = getRandomCloud(size);
     }
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
