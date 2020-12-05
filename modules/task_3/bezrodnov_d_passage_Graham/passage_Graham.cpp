@@ -8,11 +8,6 @@
 #include <random>
 #include "../../../modules/task_3/bezrodnov_d_passage_Graham/passage_Graham.h"
 
-struct point {
-    double x;
-    double y;
-};
-
 //  С какой стороны находит точка B относительно вектора A1A2
 //  Или направление поворота: > 0 - поворот левый
 //  < 0 - поворот правый, = 0 - на одной прямой (коллинеарны)
@@ -25,7 +20,9 @@ std::vector<int> InsertionSort(const std::vector<point>& _cloud, const std::vect
     for (int i = 0; i < _cloud.size(); i++) {
         int j = i;
         while (j > 1 && SideSpace(_cloud[list[0]], _cloud[list[j - 1]], _cloud[list[j]]) < 0) {
-            swap(list[j], list[j - 1]);
+            int tmp = list[j];
+            list[j] = list[j - 1];
+            list[j - 1] = tmp;
             j--;
         }
     }
@@ -37,10 +34,11 @@ std::vector<point> getRandomCloud(int size) {
     double min = -1488.415;
     double max = 988.947;
     std::vector<point> cloud(size);
-    srand(time(NULL));
+    std::mt19937 gen;
+    gen.seed(static_cast<unsigned int>(time(0)));
     for (int i = 0; i < size; i++) {
-        cloud[i].x = static_cast<double>(rand_r())/RAND_MAX*(max - min) + min;
-        cloud[i].y = static_cast<double>(rand_r())/RAND_MAX*(max - min) + min;
+        cloud[i].x = (double)(gen()) /(1000 * (max - min)) + min;
+        cloud[i].y = (double)(gen()) /(1000 * (max - min)) + min;
     }
     return cloud;
 }
@@ -61,7 +59,11 @@ std::vector<int> SequentialPassageGraham(const std::vector<point>& cloud) {
 
     for (int i = 1; i < cloud.size(); i++)
         if (cloud[number_point[i]].x < cloud[number_point[0]].x)
-            swap(number_point[0], number_point[i]);
+        {
+            int tmp = number_point[0];
+            number_point[0] = number_point[i];
+            number_point[i] = tmp;
+        }
 
     //  Второй шаг - сортировка точек
     number_point = InsertionSort(cloud, number_point);
