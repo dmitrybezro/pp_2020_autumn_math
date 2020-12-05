@@ -1,6 +1,7 @@
 // Copyright 2020 Bezrodnov Dmitry
 #ifndef MODULES_TASK_3_BEZRODNOV_D_PASSAGE_GRAHAM_PASSAGE_GRAHAM_H_
 #define MODULES_TASK_3_BEZRODNOV_D_PASSAGE_GRAHAM_PASSAGE_GRAHAM_H_
+
 #include <vector>
 
 struct point {
