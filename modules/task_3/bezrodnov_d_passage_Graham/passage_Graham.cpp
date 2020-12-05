@@ -1,11 +1,11 @@
 // Copyright 2020 Bezrodnov Dmitry
+#include <math.h>
+#include <stdlib.h>
 #include<mpi.h>
 #include<vector>
 #include <ctime>
 #include <utility>
 #include <random>
-#include <math.h>
-#include <stdlib.h>
 #include "../../../modules/task_3/bezrodnov_d_passage_Graham/passage_Graham.h"
 
 struct point {
@@ -20,8 +20,7 @@ double SideSpace(point A1, point A2, point B) {
     return (A2.x - A1.x) * (B.y - A2.y) - (A2.y - A1.y) * (B.x - A2.x);
 }
 
-std::vector<int> InsertionSort(const std::vector<point>& _cloud, const std::vector<int>& list_point)
-{
+std::vector<int> InsertionSort(const std::vector<point>& _cloud, const std::vector<int>& list_point) {
     std::vector<int> list = list_point;
     for (int i = 0; i < _cloud.size(); i++) {
         int j = i;
