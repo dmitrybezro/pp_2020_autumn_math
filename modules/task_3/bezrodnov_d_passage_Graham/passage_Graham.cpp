@@ -3,8 +3,8 @@
 #include<vector>
 #include <ctime>
 #include <utility>
-#include <math.h>
 #include <random>
+#include <math.h>
 #include <stdlib.h>
 #include "../../../modules/task_3/bezrodnov_d_passage_Graham/passage_Graham.h"
 
@@ -20,14 +20,17 @@ double SideSpace(point A1, point A2, point B) {
     return (A2.x - A1.x) * (B.y - A2.y) - (A2.y - A1.y) * (B.x - A2.x);
 }
 
-void InsertionSort(const std::vector<point>& _cloud, std::vector<int>& list_point) {
+std::vector<int> InsertionSort(const std::vector<point>& _cloud, const std::vector<int>& list_point)
+{
+    std::vector<int> list = list_point;
     for (int i = 0; i < _cloud.size(); i++) {
         int j = i;
-        while (j > 1 && SideSpace(_cloud[list_point[0]], _cloud[list_point[j - 1]], _cloud[list_point[j]]) < 0) {
-            swap(list_point[j], list_point[j - 1]);
+        while (j > 1 && SideSpace(_cloud[list[0]], _cloud[list[j - 1]], _cloud[list[j]]) < 0) {
+            swap(list[j], list[j - 1]);
             j--;
         }
     }
+    return list;
 }
 
 std::vector<point> getRandomCloud(int size) {
@@ -62,7 +65,7 @@ std::vector<int> SequentialPassageGraham(const std::vector<point>& cloud) {
             swap(number_point[0], number_point[i]);
 
     //  Второй шаг - сортировка точек
-    InsertionSort(cloud, number_point);
+    number_point = InsertionSort(cloud, number_point);
 
     //  Третий шаг - убрать ненужные вершины( правый поворот плохой)
     //  2 элеманта точно войдут в оболочку
@@ -176,7 +179,6 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
         }
 
         //  Из большой и повторяющейся оболочки сделали нормальную( вернулась в виде номеров точек)
-        
         shells = SequentialPassageGraham(big_shell);
 
         //  Восстановили нумерацию, как в большом облаке и вернули этот список номеров точек

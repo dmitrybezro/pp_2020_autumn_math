@@ -12,7 +12,7 @@ double SideSpace(point A1, point A2, point B);
 
 std::vector<point> getRandomCloud(int size);
 
-void InsertionSort(const std::vector<point>& _cloud, std::vector<int>& list_point);
+void InsertionSort(const std::vector<point>& _cloud, const std::vector<int>& list_point);
 
 std::vector<int> SequentialPassageGraham(const std::vector<point>& cloud);
 
