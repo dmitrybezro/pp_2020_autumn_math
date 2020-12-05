@@ -9,9 +9,10 @@
 std::vector<int> getRandomMatrix(int row, int col) {
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
-    std::vector<int> matr(row * col);
+    const int size = row * col;
+    std::vector<int> matr(size);
     for (int i = 0; i < row*col; i++) {
-        matr[i] = gen() % 100;
+        matr[i] = gen() % 1000-i;;
     }
     return matr;
 }
@@ -37,8 +38,8 @@ int getParallelOperations(std::vector<int> Matr, int rows, int cols) {
     int min_res;
 
 
-    int div = (rows * cols) / SIZE;
-    int mod = (rows * cols) % SIZE;
+    const int div = (rows * cols) / SIZE;
+    const int mod = (rows * cols) % SIZE;
 
     if (RANK == 0) {
         for (int i = 1; i < SIZE; i++) {
@@ -58,7 +59,7 @@ int getParallelOperations(std::vector<int> Matr, int rows, int cols) {
     } else {
         MPI_Status stat;
         if (RANK <= mod) {
-            part_vec.resize(div + 1);
+            part_vec.resize(div + size_t(1));
             MPI_Recv(&part_vec[0], div + 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &stat);
         } else {
             MPI_Recv(&part_vec[0], div, MPI_INT, 0, 0, MPI_COMM_WORLD, &stat);
