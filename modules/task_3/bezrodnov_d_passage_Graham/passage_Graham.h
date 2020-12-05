@@ -20,3 +20,4 @@ std::vector<int> SequentialPassageGraham(std::vector<point>& cloud);
 std::vector<int> ParallelPassageGraham(std::vector<point>& cloud);
 
 #endif  //  MODULES_TASK_1_BEZRODNOV_D_PASSAGE_GRAHAM_
+
