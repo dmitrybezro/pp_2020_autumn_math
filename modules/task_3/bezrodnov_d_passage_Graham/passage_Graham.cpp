@@ -17,7 +17,7 @@ double SideSpace(point A1, point A2, point B) {
 
 std::vector<int> InsertionSort(const std::vector<point>& _cloud, const std::vector<int>& list_point) {
     std::vector<int> list = list_point;
-    for (int i = 0; i < _cloud.size(); i++) {
+    for (size_t i = 0; i < _cloud.size(); i++) {
         int j = i;
         while (j > 1 && SideSpace(_cloud[list[0]], _cloud[list[j - 1]], _cloud[list[j]]) < 0) {
             int tmp = list[j];
@@ -54,7 +54,7 @@ std::vector<int> SequentialPassageGraham(const std::vector<point>& cloud) {
     //  Точка с минимальной левой координатой х, если несколько, то и у
 
     std::vector<int> number_point(cloud.size());
-    for (int i = 0; i < cloud.size(); i++)
+    for (size_t i = 0; i < cloud.size(); i++)
         number_point[i] = i;
 
     for (size_t i = 1; i < cloud.size(); i++)
@@ -75,7 +75,7 @@ std::vector<int> SequentialPassageGraham(const std::vector<point>& cloud) {
 
     //  если правый поворот, то срезаем вершину
     //  левый, добавляем
-    for (int i = 2; i < cloud.size(); i++) {
+    for (size_t i = 2; i < cloud.size(); i++) {
         while (SideSpace(cloud[mch[mch.size() - 2]], cloud[mch[mch.size() - 1]], cloud[number_point[i]]) < 0) {
             mch.pop_back();
         }
@@ -97,7 +97,7 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
 
     //  Перевили облако в массив даблов
     std::vector<double> cloud_double;
-    for (int i = 0; i < cloud.size(); i++) {
+    for (size_t i = 0; i < cloud.size(); i++) {
         cloud_double.push_back(cloud[i].x);
         cloud_double.push_back(cloud[i].y);
     }
@@ -140,8 +140,8 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
         std::vector<int> partical_shell_point = SequentialPassageGraham(cloudlet);
 
         // А здесь переведем нумерацию оболочки, как в основном облаке
-        for (int i = 0; i < partical_shell_point.size(); i++) {
-            for (int j = 0; j < cloud.size(); j++) {
+        for (size_t i = 0; i < partical_shell_point.size(); i++) {
+            for (size_t j = 0; j < cloud.size(); j++) {
                 if (cloudlet[partical_shell_point[i]].x == cloud[j].x &&
                     cloudlet[partical_shell_point[i]].y == cloud[j].y) {
                     partical_shell_point[i] = j;
@@ -173,7 +173,7 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
             MPI_Recv(&shells[0], NumElems, MPI_INT, i, 0, MPI_COMM_WORLD, &stat);
 
             //  Перевели номера точек в сами точки в большом списке
-            for (int j = 0; j < shells.size(); j++) {
+            for (size_t j = 0; j < shells.size(); j++) {
                 big_shell.push_back(cloud[shells[j]]);
             }
         }
@@ -182,8 +182,8 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
         shells = SequentialPassageGraham(big_shell);
 
         //  Восстановили нумерацию, как в большом облаке и вернули этот список номеров точек
-        for (int i = 0; i < shells.size(); i++) {
-            for (int j = 0; j < cloud.size(); j++) {
+        for (size_t i = 0; i < shells.size(); i++) {
+            for (size_t j = 0; j < cloud.size(); j++) {
                 if (big_shell[shells[i]].x == cloud[j].x && big_shell[shells[i]].y == cloud[j].y) {
                     shells[i] = j;
                     break;
@@ -193,6 +193,4 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
     }
     return shells;
 }
-
-
 
