@@ -131,7 +131,7 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
         // Перевели частицу облака из даблов в точки
         std::vector<point> cloudlet(part_cloud.size() / 2);
 
-        for (int i = 0; i < cloudlet.size(); i++) {
+        for (size_t i = 0; i < cloudlet.size(); i++) {
             cloudlet[i].x = part_cloud[2 * i];
             cloudlet[i].y = part_cloud[2 * i + 1];
         }
