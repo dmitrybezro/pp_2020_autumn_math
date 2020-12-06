@@ -17,8 +17,8 @@ double SideSpace(point A1, point A2, point B) {
 
 std::vector<int> InsertionSort(const std::vector<point>& _cloud, const std::vector<int>& list_point) {
     std::vector<int> list = list_point;
-    for (size_t i = 0; i < _cloud.size(); i++) {
-        size_t j = i;
+    for (int i = 0; i < _cloud.size(); i++) {
+        int j = i;
         while (j > 1 && SideSpace(_cloud[list[0]], _cloud[list[j - 1]], _cloud[list[j]]) < 0) {
             int tmp = list[j];
             list[j] = list[j - 1];
@@ -36,7 +36,7 @@ std::vector<point> getRandomCloud(int size) {
     std::vector<point> cloud(size);
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
-    for (size_t i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         cloud[i].x = static_cast<double>(gen()) / (1000 * (max - min)) + min * pow(-1, i);
         cloud[i].y = static_cast<double>(gen()) / (1000 * (max - min)) + min * pow(-1, i + 1);
     }
@@ -75,7 +75,7 @@ std::vector<int> SequentialPassageGraham(const std::vector<point>& cloud) {
 
     //  если правый поворот, то срезаем вершину
     //  левый, добавляем
-    for (size_t i = 2; i < cloud.size(); i++) {
+    for (int i = 2; i < cloud.size(); i++) {
         while (SideSpace(cloud[mch[mch.size() - 2]], cloud[mch[mch.size() - 1]], cloud[number_point[i]]) < 0) {
             mch.pop_back();
         }
@@ -88,7 +88,6 @@ std::vector<int> SequentialPassageGraham(const std::vector<point>& cloud) {
 std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
     int RANK;
     int SIZE;
-    MPI_Status stat;
     MPI_Comm_size(MPI_COMM_WORLD, &SIZE);
     MPI_Comm_rank(MPI_COMM_WORLD, &RANK);
 
@@ -97,15 +96,14 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
     }
 
     //  Перевили облако в массив даблов
-    std::vector<double> cloud_double(cloud.size() * 2);
-    for (size_t i = 0; i < cloud.size(); i++) {
+    std::vector<double> cloud_double;
+    for (int i = 0; i < cloud.size(); i++) {
         cloud_double.push_back(cloud[i].x);
         cloud_double.push_back(cloud[i].y);
     }
 
     int div = cloud.size() / (SIZE - 1);
     int mod = cloud.size() % (SIZE - 1);
-    std::vector<double> part_cloud;
 
     if (RANK == 0) {
         for (int proc = 0; proc < SIZE - 1; proc++) {
@@ -118,12 +116,13 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
             }
         }
     } else {
+        MPI_Status stat;
+        std::vector<double> part_cloud(2 * div);
         if (RANK <= mod) {
             part_cloud.resize(2 * (div + 1));
             MPI_Recv(&part_cloud[0], 2 * (div + 1),
                 MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &stat);
         } else {
-            part_cloud.resize(2 * div);
             MPI_Recv(&part_cloud[0], 2 * div,
                 MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &stat);
         }
@@ -132,7 +131,7 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
         // Перевели частицу облака из даблов в точки
         std::vector<point> cloudlet(part_cloud.size() / 2);
 
-        for (size_t i = 0; i < cloudlet.size(); i++) {
+        for (int i = 0; i < cloudlet.size(); i++) {
             cloudlet[i].x = part_cloud[2 * i];
             cloudlet[i].y = part_cloud[2 * i + 1];
         }
@@ -162,7 +161,9 @@ std::vector<int> ParallelPassageGraham(const std::vector<point>& cloud) {
     std::vector<point> big_shell;
     if (RANK == 0) {
         for (int i = 1; i < SIZE; i++) {
-            ////  Приняли длину оболочки
+            MPI_Status stat;
+
+            //  Приняли длину оболочки
             int NumElems;
             MPI_Probe(i, 0, MPI_COMM_WORLD, &stat);
             MPI_Get_count(&stat, MPI_INT, &NumElems);

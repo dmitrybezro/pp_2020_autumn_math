@@ -1,6 +1,8 @@
 // Copyright 2020 Bezrodnov Dmitry
 #include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
+#include<mpi.h>
+#include <iostream>
 #include <vector>
 #include "./passage_Graham.h"
 
@@ -8,15 +10,13 @@ TEST(Parallel_Operations_MPI, Cloud_10_point) {
     int RANK;
     MPI_Comm_rank(MPI_COMM_WORLD, &RANK);
     int size = 10;
-    std::vector<point> cloud;
-    if (RANK == 0) {
-        cloud = getRandomCloud(size);
-    }
+    std::vector<point> cloud(size);
+    cloud = getRandomCloud(size);
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
+    std::vector<int> list_sequen = SequentialPassageGraham(cloud);
 
     if (RANK == 0) {
-        std::vector<int> list_sequen = SequentialPassageGraham(cloud);
         ASSERT_EQ(list_parall, list_sequen);
     }
 }
@@ -25,15 +25,12 @@ TEST(Parallel_Operations_MPI, Cloud_57_point) {
     int RANK;
     MPI_Comm_rank(MPI_COMM_WORLD, &RANK);
     int size = 57;
-    std::vector<point> cloud;
-    if (RANK == 0) {
-        cloud = getRandomCloud(size);
-    }
+    std::vector<point> cloud(size);
+    cloud = getRandomCloud(size);
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
-
+    std::vector<int> list_sequen = SequentialPassageGraham(cloud);
     if (RANK == 0) {
-        std::vector<int> list_sequen = SequentialPassageGraham(cloud);
         ASSERT_EQ(list_parall, list_sequen);
     }
 }
@@ -42,15 +39,11 @@ TEST(Parallel_Operations_MPI, Cloud_101_point) {
     int RANK;
     MPI_Comm_rank(MPI_COMM_WORLD, &RANK);
     int size = 101;
-    std::vector<point> cloud;
-    if (RANK == 0) {
-        cloud = getRandomCloud(size);
-    }
-
+    std::vector<point> cloud(size);
+    cloud = getRandomCloud(size);
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
-
+    std::vector<int> list_sequen = SequentialPassageGraham(cloud);
     if (RANK == 0) {
-        std::vector<int> list_sequen = SequentialPassageGraham(cloud);
         ASSERT_EQ(list_parall, list_sequen);
     }
 }
@@ -59,15 +52,12 @@ TEST(Parallel_Operations_MPI, Cloud_203_point) {
     int RANK;
     MPI_Comm_rank(MPI_COMM_WORLD, &RANK);
     int size = 203;
-    std::vector<point> cloud;
-    if (RANK == 0) {
-        cloud = getRandomCloud(size);
-    }
+    std::vector<point> cloud(size);
+    cloud = getRandomCloud(size);
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
-
+    std::vector<int> list_sequen = SequentialPassageGraham(cloud);
     if (RANK == 0) {
-        std::vector<int> list_sequen = SequentialPassageGraham(cloud);
         ASSERT_EQ(list_parall, list_sequen);
     }
 }
@@ -76,15 +66,12 @@ TEST(Parallel_Operations_MPI, Cloud_256_point) {
     int RANK;
     MPI_Comm_rank(MPI_COMM_WORLD, &RANK);
     int size = 256;
-    std::vector<point> cloud;
-    if (RANK == 0) {
-        cloud = getRandomCloud(size);
-    }
+    std::vector<point> cloud(size);
+    cloud = getRandomCloud(size);
 
     std::vector<int> list_parall = ParallelPassageGraham(cloud);
-
+    std::vector<int> list_sequen = SequentialPassageGraham(cloud);
     if (RANK == 0) {
-        std::vector<int> list_sequen = SequentialPassageGraham(cloud);
         ASSERT_EQ(list_parall, list_sequen);
     }
 }
