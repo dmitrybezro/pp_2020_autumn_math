@@ -33,6 +33,7 @@ double Func(int index_funk, double x) {
       break;
     default:
       throw std::runtime_error("Wrong index of funktion");
+      break;
   }
 }
 
