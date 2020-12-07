@@ -74,7 +74,7 @@ std::vector<double> parallelIterMethod(std::vector<double> A, std::vector<double
         }
     }
     MPI_Scatterv(b.data(), sendcounts_b, displs_b, MPI_DOUBLE, b_proc, proc_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    MPI_Scatter(x.data(), n, MPI_DOUBLE, tmp, n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(tmp, n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     // -- Actual Algorithm --
     for (int i = 0; i < proc_size; ++i) {
