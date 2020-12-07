@@ -24,16 +24,12 @@ double Func(int index_funk, double x) {
   switch (index_funk) {
     case 0:
       return fabs(x - 1);
-      break;
     case 1:
       return (x*x + 2);
-      break;
     case 2:
       return (coef[0] * sin(coef[1] * x) + coef[2] * cos(coef[3] * x) + coef[4]);
-      break;
     default:
       throw std::runtime_error("Wrong index of funktion");
-      break;
   }
 }
 

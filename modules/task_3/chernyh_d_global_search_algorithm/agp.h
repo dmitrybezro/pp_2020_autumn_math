@@ -22,7 +22,8 @@ struct Trial {
     return *this;
   }
   bool operator == (const Trial &tr) {
-    if (fabs(x - tr.x) < FLT_EPSILON && fabs(z - tr.z) < FLT_EPSILON)
+    double epsilon = 0.00001;
+    if (fabs(x - tr.x) < epsilon && fabs(z - tr.z) < epsilon)
      return true;
     else
      return false;
