@@ -17,7 +17,7 @@ void CoefIn(std::vector<int> _coef) {
 void FuncInit(void) {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
-  for (int i = 0; i < coef.size(); i++) coef[i] = gen() % 10 + 1;
+  for (int i = 0; i < static_cast<int>(coef.size()); i++) coef[i] = gen() % 10 + 1;
 }
 
 double Func(int index_funk, double x) {
