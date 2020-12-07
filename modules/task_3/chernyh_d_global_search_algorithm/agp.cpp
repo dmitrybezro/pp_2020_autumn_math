@@ -92,9 +92,6 @@ Trial getParallelOperations(std::vector<Trial> trials, int index_func, double ep
   Trial current = trials[0];
   double curr_eps = second.x - first.x;
   std::vector<Trial>::iterator it = trials.begin();
-  int itr = 0;
-  int best_i = 0;
-  double best_z = first.z;
   double Mmax = 0;
   while (curr_eps > eps) {
     size_m = size;
