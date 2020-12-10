@@ -31,7 +31,7 @@ int* odd_even_merge(int* a, int* b, int size1, int size2) {
     }
     std::memcpy(&res[0], a, size1 * sizeof(int));
     std::memcpy(&res[0] + size1, b, size2 * sizeof(int));
-    for (int p = 1; p < size; p += p)
+    for (int p = 1; p < size; p *= 2)
         for (int k = p; k > 0; k /= 2)
             for (int j = k % p; j + k < size; j += (2 * k))
                 for (int i = 0; i < size - j - k; i++)
