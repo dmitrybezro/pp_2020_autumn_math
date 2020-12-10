@@ -89,7 +89,7 @@ int parallel_qsort(int* global_vec, int vec_size) {
     int r_size = 0;
     if (rank < size) {
         while (curr_size > 1) {
-            if ( !((rank - level) % (2 * level)) ) {  // send only
+            if ( (rank % (2 * level)) == level ) {  // send only
                 MPI_Send(&loc_size, 1, MPI_INT, rank - level,
                     0, MPI_COMM_WORLD);
                 MPI_Send(local_arr, loc_size, MPI_INT, rank - level,
@@ -117,5 +117,6 @@ int parallel_qsort(int* global_vec, int vec_size) {
     if (rank == 0) {
         std::memcpy(global_vec, local_arr, loc_size * sizeof(int));
     }
+    delete[] local_arr;
     return 0;
 }
