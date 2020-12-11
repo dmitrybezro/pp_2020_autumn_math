@@ -136,9 +136,12 @@ Trial getParallelOperations(std::vector<Trial> trials, int index_func, double ep
     }
     MPI_Allreduce(&ch_interval, &Rmax, 1, MPI_DOUBLE_INT, MPI_MAXLOC, MPI_COMM_WORLD);
     curr_eps = trials[Rmax.pos].x - trials[Rmax.pos - 1].x;
-    current.x = (trials[Rmax.pos].x + trials[Rmax.pos - 1].x) / 2
-              - (trials[Rmax.pos].z - trials[Rmax.pos - 1].z) / (2 * Mmax);
-    current.z = Func(index_func, current.x);
+    if (rank == 0) {
+      current.x = (trials[Rmax.pos].x + trials[Rmax.pos - 1].x) / 2
+                - (trials[Rmax.pos].z - trials[Rmax.pos - 1].z) / (2 * Mmax);
+      current.z = Func(index_func, current.x);
+    }
+    MPI_Bcast(&current, 2, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     std::vector<Trial>::iterator it2 = trials.begin();
     for (it = trials.begin(); it - trials.begin() <= Rmax.pos; it++) it2 = it;
     trials.insert(it2, current);
