@@ -287,7 +287,7 @@ double** VectorInPointer(const std::vector<double> _matr, int cols) {
             matr[i] = new double[cols];
         }
 
-        for (int i = 0; i < _matr.size()/cols; i++) {
+        for (size_t i = 0; i < _matr.size()/cols; i++) {
             for (int j = 0; j < cols; j++) {
                 matr[i][j] = _matr[j + i*cols];
             }
@@ -338,7 +338,7 @@ std::vector<double> MultiMatrVector(const std::vector<double>& matr, const std::
     std::vector<double> result;
     result.assign(vec.size(), 0);
     for (size_t i = 0; i < vec.size(); i++) {
-        for (int j = 0; j < vec.size(); j++) {
+        for (size_t j = 0; j < vec.size(); j++) {
             result[i] += matr[j + vec.size() * i] * vec[j];
         }
     }

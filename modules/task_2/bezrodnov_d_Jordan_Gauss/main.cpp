@@ -15,7 +15,7 @@ TEST(Parallel_Operations_MPI, Test_1_Matrix_3_3) {
     std::vector<double> X_parall = ParallelJordanGauss(MainMatr, size);
     if (RANK == 0) {
         std::vector<double> X_inv = MultiInverseMatrix(MainMatr, size);
-        for (int i = 0; i < X_parall.size(); i++) {
+        for (size_t i = 0; i < X_parall.size(); i++) {
            ASSERT_NEAR(X_parall[i], X_inv[i], 0.01);
         }
     }
@@ -29,7 +29,7 @@ TEST(Parallel_Operations_MPI, Test_2_Matrix_4_4) {
     std::vector<double> X_parall = ParallelJordanGauss(MainMatr, size);
     if (RANK == 0) {
         std::vector<double> X_inv = MultiInverseMatrix(MainMatr, size);
-        for (int i = 0; i < X_parall.size(); i++) {
+        for (size_t i = 0; i < X_parall.size(); i++) {
            ASSERT_NEAR(X_parall[i], X_inv[i], 0.01);
         }
     }
@@ -48,7 +48,7 @@ TEST(Parallel_Operations_MPI, Test_3_Matrix_5_5) {
     std::vector<double> X_parall = ParallelJordanGauss(MainMatr, size);
     if (RANK == 0) {
         std::vector<double> X_inv = MultiInverseMatrix(MainMatr, size);
-        for (int i = 0; i < X_parall.size(); i++) {
+        for (size_t i = 0; i < X_parall.size(); i++) {
            ASSERT_NEAR(X_parall[i], X_inv[i], 0.01);
         }
     }
@@ -63,7 +63,7 @@ TEST(Parallel_Operations_MPI, Test_4_Matrix_7_7) {
     if (RANK == 0) {
         std::vector<double> X_sequen = SequenJordanGauss(MainMatr, size);
         std::vector<double> X_inv = MultiInverseMatrix(MainMatr, size);
-        for (int i = 0; i < X_parall.size(); i++) {
+        for (size_t i = 0; i < X_parall.size(); i++) {
            ASSERT_NEAR(X_parall[i], X_inv[i], 0.01);
         }
     }
@@ -77,7 +77,7 @@ TEST(Parallel_Operations_MPI, Test_5_Matrix_8_8) {
     std::vector<double> X_parall = ParallelJordanGauss(MainMatr, size);
     if (RANK == 0) {
         std::vector<double> X_inv = MultiInverseMatrix(MainMatr, size);
-        for (int i = 0; i < X_parall.size(); i++) {
+        for (size_t i = 0; i < X_parall.size(); i++) {
            ASSERT_NEAR(X_parall[i], X_inv[i], 0.01);
         }
     }
