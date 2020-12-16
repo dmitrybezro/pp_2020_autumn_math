@@ -19,7 +19,7 @@ std::tuple<std::vector<double>, std::vector<int>, std::vector<int>> getRandomMat
     for (int  i = 0; i < count; i++) { values[i] = gen() % 100; }
     for (int i = 0; i < count; i++) { cols[i] = gen() % sz; }
     for (int i = 1; i < sz + 1; i++) {
-        if (i = sz) pointer[i] = count;
+        if (i == sz) pointer[i] = count;
         while (true) {
             pointer[i] = pointer[i - 1] + gen() % (count / 2);
             if (pointer[i] <= count) break;
