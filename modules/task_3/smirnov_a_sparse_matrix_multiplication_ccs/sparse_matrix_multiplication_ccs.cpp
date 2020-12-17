@@ -5,7 +5,6 @@
 #include <ctime>
 #include <utility>
 #include <tuple>
-#include <iostream>
 #include "../../../modules/task_3/smirnov_a_sparse_matrix_multiplication_ccs/sparse_matrix_multiplication_ccs.h"
 
 
@@ -139,10 +138,10 @@ getParallelOperations(int sz, std::vector<double> Avalues, std::vector<int> Acol
         int count = 0;
         std::vector<double> tmp;
         for (int k = 0; k < sz; k++) {
-            if (k == rank){
-                tmp = helpSeq4Par(std::vector<double>(Avalues.begin() + Apointers[i], Avalues.begin() + Apointers[i + 1]),
+            if (k == rank) {
+                tmp = helpSeq4Par(std::vector<double>(Avalues.begin()+Apointers[i], Avalues.begin()+Apointers[i + 1]),
                                   std::vector<int>(Acols.begin() + Apointers[i], Acols.begin() + Apointers[i + 1]),
-                                  std::vector<double>(Bvalues.begin() + Bpointers[k], Bvalues.begin() + Bpointers[k + 1]),
+                                  std::vector<double>(Bvalues.begin()+Bpointers[k], Bvalues.begin()+Bpointers[k + 1]),
                                   std::vector<int>(Bcols.begin() + Bpointers[k], Bcols.begin() + Bpointers[k + 1]));
             }
         }
@@ -165,21 +164,18 @@ getParallelOperations(int sz, std::vector<double> Avalues, std::vector<int> Acol
                     cols.push_back(k);
                     count += tmp.size();
                 }
-                
             }
             if (count) {
                 pointers.push_back(pointers[pointers.size() - 1] + count);
             } else {
                 pointers.push_back(pointers[pointers.size() - 1]);
             }
-        }
-        else {
-            if(rank < sz){
+        } else {
+            if (rank < sz) {
                 int tmp_size = tmp.size();
                 MPI_Send(&tmp_size, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
                 if (tmp_size > 0)
                     MPI_Send(tmp.data(), tmp_size, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
-            
             }
         }
     }
