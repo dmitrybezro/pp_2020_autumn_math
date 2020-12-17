@@ -99,8 +99,11 @@ TEST(Parallel_Operations_MPI, Test_ParallelMultiplication) {
     if (rank == 0) {
         ASSERT_EQ(std::get<0>(newC), Cvalues);
         ASSERT_EQ(std::get<1>(newC), Ccols);
+        ASSERT_EQ(std::get<2>(newC), Cpointers);
     }
 }
+
+
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

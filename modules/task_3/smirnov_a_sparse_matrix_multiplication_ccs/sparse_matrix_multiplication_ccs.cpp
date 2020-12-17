@@ -5,6 +5,7 @@
 #include <ctime>
 #include <utility>
 #include <tuple>
+#include <iostream>
 #include "../../../modules/task_3/smirnov_a_sparse_matrix_multiplication_ccs/sparse_matrix_multiplication_ccs.h"
 
 
@@ -71,10 +72,10 @@ getSequentialOperations(std::vector<double> Avalues, std::vector<int> Acols, std
             std::vector<std::pair<double, int>> A, B;
             for (int j = 0; j < Apointers[i + 1] - Apointers[i]; j++) A.push_back(std::pair<double, int>
                                                                                   (Avalues[j + Apointers[i]],
-                                                                                  Acols[j + Apointers[i]]));
+                                                                                   Acols[j + Apointers[i]]));
             for (int j = 0; j < Bpointers[k + 1] - Bpointers[k]; j++) B.push_back(std::pair<double, int>
                                                                                   (Bvalues[j + Bpointers[k]],
-                                                                                  Bcols[j + Bpointers[k]]));
+                                                                                   Bcols[j + Bpointers[k]]));
             if (A.size() > 0 && B.size() > 0) {
                 double sum = 0;
                 int flag = 0;
@@ -101,9 +102,28 @@ getSequentialOperations(std::vector<double> Avalues, std::vector<int> Acols, std
     return { values, cols, pointers };
 }
 
+std::vector<double> helpSeq4Par(std::vector<double> Avalues, std::vector<int> Acols,
+                                std::vector<double> Bvalues, std::vector<int> Bcols) {
+    std::vector<double> values;
+    if (Avalues.size() > 0  && Bvalues.size() > 0) {
+        double sum = 0.0;
+        int flag = 0;
+        for (int j = 0; j < Avalues.size(); j++)
+            for (int l = 0; l < Bvalues.size(); l++) {
+                if (Acols[j] == Bcols[l]) {
+                    flag++;
+                    sum += Avalues[j] * Bvalues[l];
+                }
+            }
+        if (flag)
+            values.push_back(sum);
+    }
+    return values;
+}
+
 std::tuple<std::vector<double>, std::vector<int>, std::vector<int>>
 getParallelOperations(int sz, std::vector<double> Avalues, std::vector<int> Acols, std::vector<int> Apointers,
-    std::vector<double> Bvalues, std::vector<int> Bcols, std::vector<int> Bpointers) {
+                              std::vector<double> Bvalues, std::vector<int> Bcols, std::vector<int> Bpointers) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -111,73 +131,56 @@ getParallelOperations(int sz, std::vector<double> Avalues, std::vector<int> Acol
     std::vector<double> values;
     std::vector<int> cols;
     std::vector<int> pointers = { 0 };
-    std::vector<int> size_v(size);
-    std::vector<int> size_c(size);
-    std::vector<int> size_p(size);
 
     if (size < sz)
         return getSequentialOperations(Avalues, Acols, Apointers, Bvalues, Bcols, Bpointers);
 
     for (int i = 0; i < sz; i++) {
-        if (i == rank) {
-            int coun = 0;
-            std::vector<double> local_values;
-            std::vector<int> local_cols;
-            std::vector<int> local_pointers;
-            for (int k = 0; k < sz; k++) {
-                std::vector<std::pair<double, int>> A, B;
-                for (int j = 0; j < Apointers[i + 1] - Apointers[i]; j++) A.push_back(std::pair<double, int>
-                                                                                      (Avalues[j + Apointers[i]],
-                                                                                      Acols[j + Apointers[i]]));
-                for (int j = 0; j < Bpointers[k + 1] - Bpointers[k]; j++) B.push_back(std::pair<double, int>
-                                                                                      (Bvalues[j + Bpointers[k]],
-                                                                                      Bcols[j + Bpointers[k]]));
-                if (A.size() > 0 && B.size() > 0) {
-                    double sum = 0;
-                    int flag = 0;
-                    for (int j = 0; j < A.size(); j++)
-                        for (int l = 0; l < B.size(); l++) {
-                            if (A[j].second == B[l].second) {
-                                flag++;
-                                sum += A[j].first * B[l].first;
-                            }
-                        }
-                    if (flag) {
-                        local_values.push_back(sum);
-                        local_cols.push_back(k);
-                        coun++;
-                    }
+        int count = 0;
+        std::vector<double> tmp;
+        for (int k = 0; k < sz; k++) {
+            if (k == rank){
+                tmp = helpSeq4Par(std::vector<double>(Avalues.begin() + Apointers[i], Avalues.begin() + Apointers[i + 1]),
+                                  std::vector<int>(Acols.begin() + Apointers[i], Acols.begin() + Apointers[i + 1]),
+                                  std::vector<double>(Bvalues.begin() + Bpointers[k], Bvalues.begin() + Bpointers[k + 1]),
+                                  std::vector<int>(Bcols.begin() + Bpointers[k], Bcols.begin() + Bpointers[k + 1]));
+            }
+        }
+        // std::cout << "WOW" << std::endl;
+        if (rank == 0) {
+            values.insert(values.end(), tmp.begin(), tmp.end());
+            if (tmp.size() > 0) {
+                cols.push_back(0);
+                count += tmp.size();
+            }
+            for (int k = 1; k < sz; k++) {
+                int tmp_size = 0;
+                MPI_Status stat;
+                // std::cout << "WOW - 0" << rank << std::endl;
+                MPI_Recv(&tmp_size, 1, MPI_INT, k, 0, MPI_COMM_WORLD, &stat);
+                if (tmp_size > 0) {
+                    std::vector<double> tmp(tmp_size);
+                    MPI_Recv(tmp.data(), tmp_size, MPI_DOUBLE, k, 1, MPI_COMM_WORLD, &stat);
+                    values.insert(values.end(), tmp.begin(), tmp.end());
+                    cols.push_back(k);
+                    count += tmp.size();
                 }
+                
             }
-            if (coun) {
-                local_pointers.push_back(local_pointers[local_pointers.size()] + coun);
+            if (count) {
+                pointers.push_back(pointers[pointers.size() - 1] + count);
             } else {
-                local_pointers.push_back(local_pointers[local_pointers.size()]);
+                pointers.push_back(pointers[pointers.size() - 1]);
             }
-            int slv = local_values.size();
-            int slc = local_cols.size();
-            int slp = local_pointers.size();
-            MPI_Gather(&slv, 1, MPI_INT, size_v.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
-            MPI_Gather(&slc, 1, MPI_INT, size_c.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
-            MPI_Gather(&slp, 1, MPI_INT, size_p.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
-            std::vector<int> displs_c(size, 0);
-            std::vector<int> displs_v(size, 0);
-            std::vector<int> displs_p(size, 0);
-            for (int j = 0, v = 0, c = 0, p = 0; j < size; j++) {
-                v += size_v[j];
-                c += size_c[j];
-                p += size_p[j];
-                displs_c[j] = c;
-                displs_v[j] = v;
-                displs_p[j] = p;
+        }
+        else {
+            if(rank < sz){
+                int tmp_size = tmp.size();
+                MPI_Send(&tmp_size, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+                if (tmp_size > 0)
+                    MPI_Send(tmp.data(), tmp_size, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
+            
             }
-
-            MPI_Gatherv(local_values.data(), local_values.size(), MPI_DOUBLE, values.data(),
-                size_v.data(), displs_v.data(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
-            MPI_Gatherv(local_cols.data(), local_cols.size(), MPI_INT, cols.data(),
-                size_c.data(), displs_c.data(), MPI_INT, 0, MPI_COMM_WORLD);
-            MPI_Gatherv(local_pointers.data(), local_pointers.size(), MPI_INT, pointers.data(),
-                size_p.data(), displs_p.data(), MPI_INT, 0, MPI_COMM_WORLD);
         }
     }
     return { values, cols, pointers };
