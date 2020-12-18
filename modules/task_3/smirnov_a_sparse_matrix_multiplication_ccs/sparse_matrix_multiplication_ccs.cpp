@@ -78,8 +78,8 @@ getSequentialOperations(std::vector<double> Avalues, std::vector<int> Acols, std
             if (A.size() > 0 && B.size() > 0) {
                 double sum = 0;
                 int flag = 0;
-                for (__int64 j = 0; j < A.size(); j++)
-                    for (__int64 l = 0; l < B.size(); l++) {
+                for (size_t j = 0; j < A.size(); j++)
+                    for (size_t l = 0; l < B.size(); l++) {
                         if (A[j].second == B[l].second) {
                             flag++;
                             sum += A[j].first * B[l].first;
@@ -107,8 +107,8 @@ std::vector<double> helpSeq4Par(std::vector<double> Avalues, std::vector<int> Ac
     if (Avalues.size() > 0  && Bvalues.size() > 0) {
         double sum = 0.0;
         int flag = 0;
-        for (__int64 j = 0; j < Avalues.size(); j++)
-            for (__int64 l = 0; l < Bvalues.size(); l++) {
+        for (size_t j = 0; j < Avalues.size(); j++)
+            for (size_t l = 0; l < Bvalues.size(); l++) {
                 if (Acols[j] == Bcols[l]) {
                     flag++;
                     sum += Avalues[j] * Bvalues[l];
