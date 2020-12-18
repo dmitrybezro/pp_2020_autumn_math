@@ -344,3 +344,4 @@ std::vector<double> MultiMatrVector(const std::vector<double>& matr, const std::
     }
     return result;
 }
+
