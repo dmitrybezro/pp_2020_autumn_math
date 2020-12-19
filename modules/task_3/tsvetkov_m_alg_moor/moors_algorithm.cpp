@@ -52,7 +52,7 @@ std::vector<int> ParallelMoor(const std::vector<int>& g, int s,
     std::vector<int> loc(tmp * n);
     std::vector<int> loc_d(tmp, MaxInf);
 
-    if (loc.size() == 0)
+    if (loc.empty())
         loc.resize(1);
 
     std::vector<int> sendcounts(size);
