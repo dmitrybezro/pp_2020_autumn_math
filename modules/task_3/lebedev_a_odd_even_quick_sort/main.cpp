@@ -1,4 +1,5 @@
-// Copyright 2020 Kolesnikov Gleb
+// Copyright 2020 Lebedev Andrew
+
 #include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
 #include <vector>
